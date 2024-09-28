@@ -19,7 +19,7 @@ public class UserAccountResponseDto {
 	private String lastName;
 	private Set<String> roles;
 	
-	static UserAccountResponseDto getUserAccountResponseDto(UserAccount user)
+	static UserAccountResponseDto build(UserAccount user)
 	{
 		return new UserAccountResponseDto(user.getLogin(), user.getFirstName(), user.getLastName(), user.getRoles());
 	}

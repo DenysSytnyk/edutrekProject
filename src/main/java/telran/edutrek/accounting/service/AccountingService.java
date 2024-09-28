@@ -1,25 +1,32 @@
 package telran.edutrek.accounting.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.mindrot.jbcrypt.BCrypt;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.accounting.entities.UserAccount;
 import telran.edutrek.accounting.exceptions.UserExistsException;
+import telran.edutrek.accounting.exceptions.UserNotFoundException;
 import telran.edutrek.repo.EdutrekRepository;
 
 @Service
-public class AccountingService implements IAccountingManagement
+public class AccountingService implements IAccountingManagement, CommandLineRunner
 {
 	
 	@Autowired
 	EdutrekRepository repo;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	private int passLength = 6;
 
@@ -39,7 +46,7 @@ public class AccountingService implements IAccountingManagement
 	}
 
 	private String getHash(String password) {
-		return BCrypt.hashpw(password, BCrypt.gensalt());
+		return encoder.encode(password);
 	}
 
 	private boolean isPasswordValid(String password) {
@@ -48,20 +55,24 @@ public class AccountingService implements IAccountingManagement
 
 	@Override
 	public UserAccountResponseDto deleteAccountById(String login) {
-		// TODO Auto-generated method stub
-		return null;
+		UserAccount acc = getUserAccount(login);	
+		repo.delete(acc);
+		return acc.build();
 	}
-
+	private UserAccount getUserAccount(String login)
+	{
+		return repo.findById(login).orElseThrow(() -> new UserNotFoundException(login));
+	}
 	@Override
 	public UserAccountResponseDto getAccountById(String login) {
-		// TODO Auto-generated method stub
-		return null;
+		return getUserAccount(login).build();
 	}
 
 	@Override
-	public List<UserAccountResponseDto> getAllAccounts() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UserAccountResponseDto> getAllAccounts() 
+	{
+		List<UserAccountResponseDto> res = repo.findAll().stream().map(ua -> ua.build()).collect(Collectors.toList());
+		return res;
 	}
 
 	@Override
@@ -80,6 +91,17 @@ public class AccountingService implements IAccountingManagement
 	public String getPasswordHash(String login) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void run(String... args) throws Exception
+	{
+		if (!repo.existsById("admin"))
+		{
+			UserAccount admin = new UserAccount("admin", encoder.encode("administrator"), "", "");
+			admin.setRoles(new HashSet<String>(List.of("ADMIN")));
+			repo.save(admin);
+		}
 	}
 
 }

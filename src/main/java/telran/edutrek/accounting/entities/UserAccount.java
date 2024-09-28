@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import telran.edutrek.accounting.dto.UserAccountResponseDto;
 
 @Getter
 @Setter
@@ -44,6 +45,11 @@ public class UserAccount {
 		roles.add("USER");
 	}
 
+	public UserAccountResponseDto build() 
+	{
+		return UserAccountResponseDto.builder().login(login).firstName(firstName)
+				.lastName(lastName).roles(roles).build();
+	}
 
 
 }
