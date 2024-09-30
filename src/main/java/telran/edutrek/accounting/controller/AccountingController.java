@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.accounting.service.IAccountingManagement;
+
 
 @RestController
 public class AccountingController  
@@ -39,34 +41,33 @@ public class AccountingController
 	{
 		return service.deleteAccountById(id);
 	}
-//
-//	@GetMapping
-//	public UserAccountResponseDto getAccountById(String login) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@GetMapping
-//	public List<UserAccountResponseDto> getAllAccounts() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@PutMapping
-//	public boolean changePasswordById(String login, String newPassword) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
+
+	@GetMapping("/auth/{id}")
+	public UserAccountResponseDto getAccountById(@PathVariable String id) {
+		
+		return service.getAccountById(id);
+	}
+
+	@GetMapping("/auth")
+	public List<UserAccountResponseDto> getAllAccounts() {
+		List<UserAccountResponseDto> list=service.getAllAccounts();
+		return list;
+	}
+
+	@PutMapping("/auth/password/{id}")
+	public boolean changePasswordById(@PathVariable String id,@RequestHeader("X-New-Password") String newPassword ) {
+		return service.changePasswordById(id, newPassword);
+	}
+
 //	@PutMapping
 //	public boolean changeLoginById(String login, String newLogin) {
 //		// TODO Auto-generated method stub
 //		return false;
 //	}
 //
-//	@GetMapping
-//	public String getPasswordHash(String login) {
-//		return null;
-//	}
+	@GetMapping("/auth/password/{id}")
+	public String getPasswordHash(@PathVariable String id) {
+		return service.getPasswordHash(id);
+	}
 
 }
