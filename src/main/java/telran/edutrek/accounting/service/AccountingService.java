@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,6 +42,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 
 	@Override
 	public UserAccountResponseDto addNewAccount(ContactRegisterDto account) {
+		
 		if (repo.existsById(account.getLogin())) 
 			throw new UserExistsException(account.getLogin());
 		if (isPasswordValid(account.getPassword())) 
@@ -51,7 +53,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 				account.getFirstName(), account.getLastName());
 		
 		repo.save(acc);
-		return new UserAccountResponseDto(account.getLogin(), account.getFirstName(), account.getLastName(), acc.getRoles());
+		return new UserAccountResponseDto(acc.getId(), account.getLogin(), account.getFirstName(), account.getLastName(), acc.getRoles());
 	}
 
 	private String getHash(String password) {
@@ -63,18 +65,18 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	}
 
 	@Override
-	public UserAccountResponseDto deleteAccountById(String login) {
-		UserAccount acc = getUserAccount(login);	
+	public UserAccountResponseDto deleteAccountById(String id) {
+		UserAccount acc = getUserAccount(id);	
 		repo.delete(acc);
 		return acc.build();
 	}
-	private UserAccount getUserAccount(String login)
+	private UserAccount getUserAccount(String id)
 	{
-		return repo.findById(login).orElseThrow(() -> new UserNotFoundException(login));
+		return repo.findById(id).orElseThrow(() -> new UserNotFoundException( id));
 	}
 	@Override
-	public UserAccountResponseDto getAccountById(String login) {
-		return getUserAccount(login).build();
+	public UserAccountResponseDto getAccountById(String id) {
+		return getUserAccount(id).build();
 	}
 
 	@Override
@@ -85,10 +87,10 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	}
 
 	@Override
-	public boolean changePasswordById(String login, String newPassword) {
-		if(newPassword==null|| !isPasswordValid(newPassword))
+	public boolean changePasswordById(String id, String newPassword) {
+		if(newPassword==null|| isPasswordValid(newPassword))
 			throw  new PasswordNotValidException(newPassword);
-		UserAccount user=getUserAccount(login);
+		UserAccount user=getUserAccount(id);
 		if(encoder.matches(newPassword, user.getHashCode()))
 			throw new PasswordNotValidException(newPassword);
 		LinkedList<String> lastHash=user.getLastHashCodes();
@@ -97,7 +99,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 		if(lastHash.size()==amountLastHast)
 			lastHash.removeFirst();
 		lastHash.add(user.getHashCode());
-		user.setHashCode(newPassword);
+		user.setHashCode(encoder.encode(newPassword));
 		user.setActivationDate(LocalDateTime.now());
 		repo.save(user);
 		return true;
@@ -109,23 +111,36 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	}
 
 	@Override
-	public boolean changeLoginById(String login, String newLogin) {
-//		if(newLogin==null ||newLogin.equals(login))
-//			throw new LoginNotValidException(newLogin);
-//		UserAccount user=getUserAccount(newLogin);
-//		
+	public boolean changeLoginById(String id, String newLogin) 
+	{
+		UserAccount user=getUserAccount(id);
+		if(newLogin==null ||newLogin.equals(user.getLogin()) || repo.existsById(newLogin))
+			throw new LoginNotValidException(newLogin);
+		
+		user.setLogin(newLogin);
+		user.setActivationDate(LocalDateTime.now());
+		repo.save(user);
+		
 		return true;
 	}
 
 	@Override
-	public String getPasswordHash(String login) {
-		UserAccount user=getUserAccount(login);
+	public String getPasswordHash(String id) {
+		UserAccount user=getUserAccount(id);
 		return user.getHashCode();
+	}
+	
+	@Override
+	public UserAccountResponseDto getAccountByLogin(String login) 
+	{
+		return repo.findByLogin(login)
+				.orElseThrow(() -> new UsernameNotFoundException(login)).build();
 	}
 	
 	@Override
 	public void run(String... args) throws Exception
 	{
+		
 		if (!repo.existsById("admin"))
 		{
 			UserAccount admin = new UserAccount("admin", encoder.encode("administrator"), "", "");
@@ -133,5 +148,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 			repo.save(admin);
 		}
 	}
+
+
 
 }

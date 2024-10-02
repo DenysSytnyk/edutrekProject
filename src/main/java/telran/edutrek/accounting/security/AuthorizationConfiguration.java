@@ -1,6 +1,5 @@
 package telran.edutrek.accounting.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,8 +12,6 @@ import org.springframework.security.web.access.expression.WebExpressionAuthoriza
 @Configuration
 public class AuthorizationConfiguration
 {
-	@Autowired
-	CustomWebSecurity customWebSecurity ;
 	
 	@Bean
 	SecurityFilterChain configure(HttpSecurity http) throws Exception
@@ -25,11 +22,12 @@ public class AuthorizationConfiguration
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/account", "/auth/account/").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/auth").authenticated()
-				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*").authenticated()
+				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/auth/{login}")
 				.access(new WebExpressionAuthorizationManager("#login == authentication.name or hasRole('ADMIN')"))
 				.anyRequest().denyAll());
+		
 		
 		return http.build();
 	}

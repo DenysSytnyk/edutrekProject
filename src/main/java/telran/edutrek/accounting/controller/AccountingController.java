@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
+import telran.edutrek.accounting.dto.UserUpdateDto;
 import telran.edutrek.accounting.service.IAccountingManagement;
 
 
@@ -33,7 +34,7 @@ public class AccountingController
 	@PostMapping("/auth")
 	public UserAccountResponseDto login(Principal principal) {
 	
-		return service.getAccountById(principal.getName());
+		return service.getAccountByLogin(principal.getName());
 	}
 
 	@DeleteMapping("/auth/{id}")
@@ -42,10 +43,14 @@ public class AccountingController
 		return service.deleteAccountById(id);
 	}
 
-	@GetMapping("/auth/{id}")
+	@GetMapping("/auth/id/{id}")
 	public UserAccountResponseDto getAccountById(@PathVariable String id) {
-		
 		return service.getAccountById(id);
+	}
+	
+	@GetMapping("/auth/login/{login}")
+	public UserAccountResponseDto getAccountByLogin(@PathVariable String login) {
+		return service.getAccountByLogin(login);
 	}
 
 	@GetMapping("/auth")
@@ -59,12 +64,11 @@ public class AccountingController
 		return service.changePasswordById(id, newPassword);
 	}
 
-//	@PutMapping
-//	public boolean changeLoginById(String login, String newLogin) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
+	@PutMapping("/auth/login/{id}")
+	public boolean changeLoginById(@PathVariable String id,@RequestBody UserUpdateDto newLogin) {
+		return service.changeLoginById(id, newLogin.getLogin());
+	}
+
 	@GetMapping("/auth/password/{id}")
 	public String getPasswordHash(@PathVariable String id) {
 		return service.getPasswordHash(id);
