@@ -1,21 +1,25 @@
 package telran.edutrek.accounting.service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.accounting.entities.UserAccount;
-import telran.edutrek.accounting.exceptions.UserExistsException;
-import telran.edutrek.accounting.exceptions.UserNotFoundException;
+import telran.edutrek.accounting.exceptions.*;
+
 import telran.edutrek.repo.EdutrekRepository;
 
 @Service
@@ -28,7 +32,12 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	@Autowired
 	PasswordEncoder encoder;
 	
+	@Value("${password_lenghth:6}")
 	private int passLength = 6;
+	@Value("${amount_last_hash:3}")
+	private int amountLastHast = 3;
+	
+	
 
 	@Override
 	public UserAccountResponseDto addNewAccount(ContactRegisterDto account) {
@@ -77,20 +86,41 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 
 	@Override
 	public boolean changePasswordById(String login, String newPassword) {
-		// TODO Auto-generated method stub
-		return false;
+		if(newPassword==null|| !isPasswordValid(newPassword))
+			throw  new PasswordNotValidException(newPassword);
+		UserAccount user=getUserAccount(login);
+		if(encoder.matches(newPassword, user.getHashCode()))
+			throw new PasswordNotValidException(newPassword);
+		LinkedList<String> lastHash=user.getLastHashCodes();
+		if(isPasswordFromLast(newPassword,lastHash))
+			throw  new PasswordNotValidException(newPassword);
+		if(lastHash.size()==amountLastHast)
+			lastHash.removeFirst();
+		lastHash.add(user.getHashCode());
+		user.setHashCode(newPassword);
+		user.setActivationDate(LocalDateTime.now());
+		repo.save(user);
+		return true;
+	}
+
+	private boolean isPasswordFromLast(String newPassword, LinkedList<String> lastHash) {
+		return lastHash.stream().anyMatch(p->
+		encoder.matches(newPassword, p));
 	}
 
 	@Override
 	public boolean changeLoginById(String login, String newLogin) {
-		// TODO Auto-generated method stub
-		return false;
+//		if(newLogin==null ||newLogin.equals(login))
+//			throw new LoginNotValidException(newLogin);
+//		UserAccount user=getUserAccount(newLogin);
+//		
+		return true;
 	}
 
 	@Override
 	public String getPasswordHash(String login) {
-		// TODO Auto-generated method stub
-		return null;
+		UserAccount user=getUserAccount(login);
+		return user.getHashCode();
 	}
 	
 	@Override
