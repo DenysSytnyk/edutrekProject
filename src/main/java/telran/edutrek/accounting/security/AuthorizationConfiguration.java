@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,6 +25,8 @@ public class AuthorizationConfiguration
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/account", "/auth/account/").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/auth").authenticated()
+				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*").authenticated()
+				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/auth/{login}")
 				.access(new WebExpressionAuthorizationManager("#login == authentication.name or hasRole('ADMIN')"))
 				.anyRequest().denyAll());
