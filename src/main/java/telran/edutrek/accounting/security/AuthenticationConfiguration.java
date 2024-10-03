@@ -21,7 +21,7 @@ public class AuthenticationConfiguration implements UserDetailsService
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
-		UserAccount user = repo.findById(username).orElseThrow(() -> new UsernameNotFoundException(username));
+		UserAccount user = repo.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException(username));
 		
 		String password = user.getHashCode();
 		String[] roles = user.getRoles().stream().map(r -> "ROLE_" + r).toArray(String[]::new);
