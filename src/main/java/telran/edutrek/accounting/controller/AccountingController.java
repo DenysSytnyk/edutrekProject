@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import telran.edutrek.accounting.dto.ContactRegisterDto;
+import telran.edutrek.accounting.dto.LoginUpdateDto;
+import telran.edutrek.accounting.dto.PasswordUpdateDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
-import telran.edutrek.accounting.dto.UserUpdateDto;
 import telran.edutrek.accounting.service.IAccountingManagement;
 
 
@@ -26,7 +27,7 @@ public class AccountingController
 	IAccountingManagement service;
 
 	@PostMapping("/auth/account")
-	public UserAccountResponseDto addNewAccount(@RequestBody ContactRegisterDto account) {
+	public UserAccountResponseDto addNewAccount(@RequestBody @Valid ContactRegisterDto account) {
 		
 		return service.addNewAccount(account);
 	}
@@ -60,12 +61,12 @@ public class AccountingController
 	}
 
 	@PutMapping("/auth/password/{id}")
-	public boolean changePasswordById(@PathVariable String id,@RequestHeader("X-New-Password") String newPassword ) {
-		return service.changePasswordById(id, newPassword);
+	public boolean changePasswordById(@PathVariable String id,@RequestBody @Valid PasswordUpdateDto newPassword ) {
+		return service.changePasswordById(id, newPassword.getPassword());
 	}
 
 	@PutMapping("/auth/login/{id}")
-	public boolean changeLoginById(@PathVariable String id,@RequestBody UserUpdateDto newLogin) {
+	public boolean changeLoginById(@PathVariable String id,@RequestBody @Valid LoginUpdateDto newLogin) {
 		return service.changeLoginById(id, newLogin.getLogin());
 	}
 
