@@ -10,11 +10,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
@@ -46,8 +44,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 		if (repo.existsById(account.getLogin())) 
 			throw new UserExistsException(account.getLogin());
 		if (isPasswordValid(account.getPassword())) 
-			throw new ResponseStatusException(HttpStatus.CONFLICT, 
-					"Password" + account.getPassword() + " is not valid");
+			throw new PasswordNotValidException(account.getPassword());
 		
 		UserAccount acc = new UserAccount(account.getLogin(), getHash(account.getPassword()),
 				account.getFirstName(), account.getLastName());
