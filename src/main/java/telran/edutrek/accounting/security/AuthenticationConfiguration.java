@@ -24,7 +24,7 @@ public class AuthenticationConfiguration implements UserDetailsService
 		UserAccount user = repo.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException(username));
 		
 		String password = user.getHashCode();
-		String[] roles = user.getRoles().stream().map(r -> "ROLE_" + r).toArray(String[]::new);
+		String[] roles = new String[]{"ROLE_" + user.getRoles()};
 		return new User(username, password, AuthorityUtils.createAuthorityList(roles));
 	}
 

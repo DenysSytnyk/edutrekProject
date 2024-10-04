@@ -18,7 +18,7 @@ import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.accounting.entities.UserAccount;
 import telran.edutrek.accounting.exceptions.*;
-
+import telran.edutrek.api.AccountingRoles;
 import telran.edutrek.repo.EdutrekRepository;
 
 @Service
@@ -141,7 +141,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 		if (!repo.existsById("admin"))
 		{
 			UserAccount admin = new UserAccount("admin", encoder.encode("administrator"), "", "");
-			admin.setRoles(new HashSet<String>(List.of("ADMIN")));
+			admin.setRoles(AccountingRoles.ADMIN);
 			repo.save(admin);
 		}
 	}

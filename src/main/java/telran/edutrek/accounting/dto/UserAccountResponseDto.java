@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.edutrek.accounting.entities.UserAccount;
+import telran.edutrek.api.AccountingRoles;
 
 
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class UserAccountResponseDto {
 	private String login;
 	private String firstName;
 	private String lastName;
-	private Set<String> roles;
+	private AccountingRoles roles;
 	
 	static UserAccountResponseDto build(UserAccount user)
 	{
