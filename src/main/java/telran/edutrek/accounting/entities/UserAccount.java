@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
+import telran.edutrek.api.AccountingRoles;
 
 
 @Getter
@@ -24,7 +25,7 @@ public class UserAccount {
 	private String hashCode;
 	private String firstName;
 	private String lastName;
-	private HashSet<String> roles;
+	private AccountingRoles roles;
 	private LocalDateTime activationDate;
 	private boolean revoked;
 	private LinkedList<String> lastHashCodes = new LinkedList<String>();
@@ -40,8 +41,7 @@ public class UserAccount {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.activationDate = LocalDateTime.now();
-		roles = new HashSet<String>();
-		roles.add("USER");
+		roles = AccountingRoles.MODERATOR;
 
 	}
 	public UserAccountResponseDto build() 
