@@ -14,7 +14,7 @@ public class AuthorizationConfiguration
 {
 	
 	@Bean
-	SecurityFilterChain configure(HttpSecurity http) throws Exception
+	SecurityFilterChain configure(HttpSecurity http) throws Exception  
 	{
 		http.httpBasic(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 		.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
