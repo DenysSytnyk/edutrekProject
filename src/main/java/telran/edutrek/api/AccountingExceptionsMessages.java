@@ -10,4 +10,5 @@ public interface AccountingExceptionsMessages
 	String LOGIN_NOT_VALID = "Login is not valid: ";
 	String USER_EXIST = "User exist: ";
 	String USER_NOT_FOUND = "User not found: ";
+	String USER_IS_BLOCKED = "User in block: ";
 }

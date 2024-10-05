@@ -21,6 +21,7 @@ public class AuthorizationConfiguration
 		
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/account", "/auth/account/").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/auth/block/*", "/auth/activate/*").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/auth").authenticated()
 				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*").authenticated()
