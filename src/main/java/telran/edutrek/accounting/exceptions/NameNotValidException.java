@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SuppressWarnings("serial")
 @ResponseStatus(HttpStatus.CONFLICT)
-public class LoginNotValidException extends RuntimeException {
+public class NameNotValidException extends RuntimeException {
 
-	public LoginNotValidException(String login) {
-		super("Login "+login+" is not valid");
+	public NameNotValidException(String name) {
+		super("Name "+name+" is not valid");
+		
 	}
+
+	
 }
