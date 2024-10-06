@@ -50,7 +50,8 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 				account.getFirstName(), account.getLastName());
 		
 		repo.save(acc);
-		return new UserAccountResponseDto(acc.getId(), account.getLogin(), account.getFirstName(), account.getLastName(), acc.getRoles());
+		return new UserAccountResponseDto(acc.getId(), account.getLogin(), account.getFirstName(),
+				account.getLastName(), acc.getRoles(), acc.isRevoked());
 	}
 
 	private String getHash(String password) {
@@ -135,6 +136,24 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	}
 	
 	@Override
+	public boolean blockUser(String id) 
+	{
+		UserAccount user=getUserAccount(id);
+		user.setRevoked(true);
+		repo.save(user);
+		return true;
+	}
+
+	@Override
+	public boolean activateUser(String id) 
+	{
+		UserAccount user=getUserAccount(id);
+		user.setRevoked(false);
+		repo.save(user);
+		return true;
+	}
+	
+	@Override
 	public void run(String... args) throws Exception
 	{
 		
@@ -145,6 +164,8 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 			repo.save(admin);
 		}
 	}
+
+
 
 
 

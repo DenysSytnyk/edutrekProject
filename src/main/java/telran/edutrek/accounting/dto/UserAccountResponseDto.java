@@ -1,6 +1,6 @@
 package telran.edutrek.accounting.dto;
 
-import java.util.Set;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +20,11 @@ public class UserAccountResponseDto {
 	private String firstName;
 	private String lastName;
 	private AccountingRoles roles;
+	boolean revoked;
 	
 	static UserAccountResponseDto build(UserAccount user)
 	{
-		return new UserAccountResponseDto(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(), user.getRoles());
+		return new UserAccountResponseDto(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(),
+				user.getRoles(), user.isRevoked());
 	}
 }
