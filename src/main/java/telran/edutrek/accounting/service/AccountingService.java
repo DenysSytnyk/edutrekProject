@@ -1,7 +1,6 @@
 package telran.edutrek.accounting.service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -163,6 +162,30 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 			admin.setRoles(AccountingRoles.ADMIN);
 			repo.save(admin);
 		}
+	}
+
+	@Override
+	public boolean changeFirstNameById(String id, String newFirstName) {
+		UserAccount user=getUserAccount(id);
+		if(newFirstName==null || repo.existsById(newFirstName))
+			throw new NameNotValidException(newFirstName);
+		
+		user.setFirstName(newFirstName);
+		user.setActivationDate(LocalDateTime.now());
+		repo.save(user);
+		return true;
+	}
+
+	@Override
+	public boolean changeLastNameById(String id, String newLastName) {
+		UserAccount user=getUserAccount(id);
+		if(newLastName==null || repo.existsById(newLastName))
+			throw new NameNotValidException(newLastName);
+		
+		user.setFirstName(newLastName);
+		user.setActivationDate(LocalDateTime.now());
+		repo.save(user);
+		return true;
 	}
 
 
