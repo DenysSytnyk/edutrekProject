@@ -91,11 +91,11 @@ public class AccountingController
 		return service.activateUser(id);
 	}
 	@PutMapping("/auth/firstName/{id}/{newFirstName}")
-	public boolean changeFirstNameById(@PathVariable String id,@RequestBody String newFirstName) {
+	public boolean changeFirstNameById(@PathVariable String id,@PathVariable String newFirstName) {
 		return service.changeFirstNameById(id, newFirstName);
 	}
 	@PutMapping("/auth/stName/{id}/{newLastName}")
-	public boolean changeLastNameById(@PathVariable String id,@RequestBody String newLastName) {
+	public boolean changeLastNameById(@PathVariable String id,@PathVariable String newLastName) {
 		return service.changeLastNameById(id, newLastName);
 	}
 
