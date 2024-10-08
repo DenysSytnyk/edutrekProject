@@ -12,6 +12,7 @@ import telran.edutrek.utils.StatusContact;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserContactDto {
+	private String id;
 	private String name;
 	private String surName;
 	private String phone;
