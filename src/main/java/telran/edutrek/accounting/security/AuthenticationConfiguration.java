@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import telran.edutrek.accounting.entities.UserAccount;
-import telran.edutrek.repo.EdutrekRepository;
+import telran.edutrek.accounting.repo.EdutrekRepository;
 
 @Configuration
 public class AuthenticationConfiguration implements UserDetailsService

@@ -17,8 +17,8 @@ import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.accounting.entities.UserAccount;
 import telran.edutrek.accounting.exceptions.*;
+import telran.edutrek.accounting.repo.EdutrekRepository;
 import telran.edutrek.api.AccountingRoles;
-import telran.edutrek.repo.EdutrekRepository;
 
 @Service
 public class AccountingService implements IAccountingManagement, CommandLineRunner
@@ -111,7 +111,9 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	public boolean changeLoginById(String id, String newLogin) 
 	{
 		UserAccount user=getUserAccount(id);
-		if(newLogin==null ||newLogin.equals(user.getLogin()) || repo.existsById(newLogin))
+		List<String> list = repo.findAll().stream().map(ua -> ua.getLogin()).toList();
+		
+		if(newLogin==null ||newLogin.equals(user.getLogin()) || repo.existsById(newLogin) || list.contains(newLogin))
 			throw new LoginNotValidException(newLogin);
 		
 		user.setLogin(newLogin);

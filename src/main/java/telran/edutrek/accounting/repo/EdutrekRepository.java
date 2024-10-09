@@ -1,4 +1,4 @@
-package telran.edutrek.repo;
+package telran.edutrek.accounting.repo;
 
 import java.util.Optional;
 

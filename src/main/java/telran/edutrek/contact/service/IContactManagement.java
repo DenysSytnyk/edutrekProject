@@ -3,6 +3,7 @@ package telran.edutrek.contact.service;
 import java.util.List;
 
 import telran.edutrek.contact.dto.UserContactDto;
+import telran.edutrek.contact.dto.UserContactRegisterDto;
 
 public interface IContactManagement {
 	
@@ -11,8 +12,5 @@ public interface IContactManagement {
 	UserContactDto getContactById(String id);
 	List<UserContactDto> getAllContact();
 	List<UserContactDto> getContactByName(String name);
-	List<UserContactDto> getContactBySurName(String surName);
-	
-
-	
+	List<UserContactDto> getContactBySurName(String surName);	
 }
