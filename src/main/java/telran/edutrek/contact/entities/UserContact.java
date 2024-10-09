@@ -31,7 +31,7 @@ public class UserContact {
 	public UserContact(String id, String name, String surName, String phone, String email, String city, Course course,
 			ArrayList<String> sourse, String comment, StatusContact statusContact) {
 		super();
-		this.id = name+surName+phone;
+		this.id = phone;
 		this.name = name;
 		this.surName = surName;
 		this.phone = phone;
