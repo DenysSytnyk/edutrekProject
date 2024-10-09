@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.edutrek.contact.dto.UserContactDto;
+import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.utils.Course;
 import telran.edutrek.utils.StatusContact;
 
@@ -16,16 +19,16 @@ import telran.edutrek.utils.StatusContact;
 @NoArgsConstructor
 public class StudentDto extends UserContactDto
 {
-	private String group;
+	private GroupDto group;
 	private int cost_course;
-	private List<String> payments;
+	private List<PaymentDto> payments;
 	private LinkedList<String> logs;
 	private Integer[] status_payment;
-	private String reminder;
+	private ReminderDto reminder;
 	
 	public StudentDto(String id, String name, String surName, String phone, String email, String city, Course course,
-			ArrayList<String> sourse, String comment, StatusContact statusContact, String group, int cost_course,
-			List<String> payments, LinkedList<String> logs, Integer[] status_payment, String reminder) {
+			ArrayList<String> sourse, String comment, StatusContact statusContact, GroupDto group, int cost_course,
+			List<PaymentDto> payments, LinkedList<String> logs, Integer[] status_payment, ReminderDto reminder) {
 		super(id, name, surName, phone, email, city, course, sourse, comment, statusContact);
 		this.group = group;
 		this.cost_course = cost_course;

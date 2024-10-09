@@ -18,6 +18,5 @@ public class StudentUpdateDto
 	private String city;
 	private Course course;
 	private StatusContact statusContact;
-	private String group;
 	private int cost_course;
 }
