@@ -17,6 +17,7 @@ import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.LoginUpdateDto;
 import telran.edutrek.accounting.dto.PasswordUpdateDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
+import telran.edutrek.accounting.exceptions.UserIsBlockedException;
 import telran.edutrek.accounting.service.IAccountingManagement;
 
 
@@ -33,9 +34,14 @@ public class AccountingController
 	}
 	
 	@PostMapping("/auth")
-	public UserAccountResponseDto login(Principal principal) {
-	
-		return service.getAccountByLogin(principal.getName());
+	public UserAccountResponseDto login(Principal principal) 
+	{
+		UserAccountResponseDto user = service.getAccountByLogin(principal.getName());
+		
+		if (user.isRevoked()) 
+			throw new UserIsBlockedException(principal.getName());
+		
+		return user;
 	}
 
 	@DeleteMapping("/auth/{id}")
@@ -73,6 +79,24 @@ public class AccountingController
 	@GetMapping("/auth/password/{id}")
 	public String getPasswordHash(@PathVariable String id) {
 		return service.getPasswordHash(id);
+	}
+	
+	@PutMapping("/auth/block/{id}")
+	public boolean blockUserById(@PathVariable String id) {
+		return service.blockUser(id);
+	}
+	
+	@PutMapping("/auth/activate/{id}")
+	public boolean activateUserById(@PathVariable String id) {
+		return service.activateUser(id);
+	}
+	@PutMapping("/auth/firstName/{id}/{newFirstName}")
+	public boolean changeFirstNameById(@PathVariable String id,@PathVariable String newFirstName) {
+		return service.changeFirstNameById(id, newFirstName);
+	}
+	@PutMapping("/auth/stName/{id}/{newLastName}")
+	public boolean changeLastNameById(@PathVariable String id,@PathVariable String newLastName) {
+		return service.changeLastNameById(id, newLastName);
 	}
 
 }

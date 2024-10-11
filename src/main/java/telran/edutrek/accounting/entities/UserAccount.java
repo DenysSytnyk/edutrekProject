@@ -1,7 +1,6 @@
 package telran.edutrek.accounting.entities;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedList;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -41,13 +40,14 @@ public class UserAccount {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.activationDate = LocalDateTime.now();
+		this.revoked = false;
 		roles = AccountingRoles.MODERATOR;
 
 	}
 	public UserAccountResponseDto build() 
 	{
 		return UserAccountResponseDto.builder().id(id).login(login).firstName(firstName)
-				.lastName(lastName).roles(roles).build();
+				.lastName(lastName).roles(roles).revoked(revoked).build();
 	}
 
 

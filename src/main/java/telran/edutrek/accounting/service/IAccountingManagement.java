@@ -15,6 +15,9 @@ public interface IAccountingManagement
 	boolean changePasswordById(String id, String newPassword);
 	boolean changeLoginById(String id, String newLogin);
 	String getPasswordHash(String id);
-
+	boolean blockUser(String id);
+	boolean activateUser(String id);
+	boolean changeFirstNameById(String id, String newFirstName);
+	boolean changeLastNameById(String id, String newLastName);
 	
 }

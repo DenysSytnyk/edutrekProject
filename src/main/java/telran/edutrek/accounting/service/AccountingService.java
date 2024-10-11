@@ -1,7 +1,6 @@
 package telran.edutrek.accounting.service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +17,8 @@ import telran.edutrek.accounting.dto.ContactRegisterDto;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.accounting.entities.UserAccount;
 import telran.edutrek.accounting.exceptions.*;
+import telran.edutrek.accounting.repo.EdutrekRepository;
 import telran.edutrek.api.AccountingRoles;
-import telran.edutrek.repo.EdutrekRepository;
 
 @Service
 public class AccountingService implements IAccountingManagement, CommandLineRunner
@@ -50,7 +49,8 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 				account.getFirstName(), account.getLastName());
 		
 		repo.save(acc);
-		return new UserAccountResponseDto(acc.getId(), account.getLogin(), account.getFirstName(), account.getLastName(), acc.getRoles());
+		return new UserAccountResponseDto(acc.getId(), account.getLogin(), account.getFirstName(),
+				account.getLastName(), acc.getRoles(), acc.isRevoked());
 	}
 
 	private String getHash(String password) {
@@ -111,7 +111,9 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	public boolean changeLoginById(String id, String newLogin) 
 	{
 		UserAccount user=getUserAccount(id);
-		if(newLogin==null ||newLogin.equals(user.getLogin()) || repo.existsById(newLogin))
+		List<String> list = repo.findAll().stream().map(ua -> ua.getLogin()).toList();
+		
+		if(newLogin==null ||newLogin.equals(user.getLogin()) || repo.existsById(newLogin) || list.contains(newLogin))
 			throw new LoginNotValidException(newLogin);
 		
 		user.setLogin(newLogin);
@@ -135,6 +137,24 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	}
 	
 	@Override
+	public boolean blockUser(String id) 
+	{
+		UserAccount user=getUserAccount(id);
+		user.setRevoked(true);
+		repo.save(user);
+		return true;
+	}
+
+	@Override
+	public boolean activateUser(String id) 
+	{
+		UserAccount user=getUserAccount(id);
+		user.setRevoked(false);
+		repo.save(user);
+		return true;
+	}
+	
+	@Override
 	public void run(String... args) throws Exception
 	{
 		
@@ -145,6 +165,32 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 			repo.save(admin);
 		}
 	}
+
+	@Override
+	public boolean changeFirstNameById(String id, String newFirstName) {
+		UserAccount user=getUserAccount(id);
+		if(newFirstName==null || repo.existsById(newFirstName))
+			throw new NameNotValidException(newFirstName);
+		
+		user.setFirstName(newFirstName);
+		user.setActivationDate(LocalDateTime.now());
+		repo.save(user);
+		return true;
+	}
+
+	@Override
+	public boolean changeLastNameById(String id, String newLastName) {
+		UserAccount user=getUserAccount(id);
+		if(newLastName==null || repo.existsById(newLastName))
+			throw new NameNotValidException(newLastName);
+		
+		user.setFirstName(newLastName);
+		user.setActivationDate(LocalDateTime.now());
+		repo.save(user);
+		return true;
+	}
+
+
 
 
 
