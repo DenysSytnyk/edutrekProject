@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.group.service.IGroupManagement;
 import telran.edutrek.student.dto.StudentDto;
@@ -22,7 +23,7 @@ public class GroupController
 	IGroupManagement service;
 
 	@PostMapping("/group/create")
-	public GroupDto createGroup(@RequestBody GroupDto group) 
+	public GroupDto createGroup(@RequestBody GroupRegisterDto group) 
 	{
 		return service.createGroup(group);
 	}

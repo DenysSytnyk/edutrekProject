@@ -3,12 +3,13 @@ package telran.edutrek.group.service;
 import java.util.List;
 
 import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.student.dto.StudentDto;
 
 public interface IGroupManagement 
 {
-	GroupDto createGroup(GroupDto group);
+	GroupDto createGroup(GroupRegisterDto group);
 	GroupDto updateGroupById(String id, GroupUpdateDto newGroupData);
 	GroupDto getGroupById(String id);
 	List<GroupDto> getAllGroups();

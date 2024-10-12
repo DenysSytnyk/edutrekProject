@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.group.entities.GroupData;
 import telran.edutrek.group.exceptions.GroupExistsExceptions;
@@ -32,14 +33,14 @@ public class GroupService implements IGroupManagement
 	StudentRepository studRepo;
 
 	@Override
-	public GroupDto createGroup(GroupDto group) 
+	public GroupDto createGroup(GroupRegisterDto group) 
 	{
-		if (repo.existsById(group.getId())) 
-		throw new GroupExistsExceptions(group.getId());
+		if (repo.existsById(group.getName())) 
+		throw new GroupExistsExceptions(group.getName());
 		
-		GroupData data = GroupDto.build(group);
+		GroupData data = GroupRegisterDto.build(group);
 		repo.save(data);
-		return group;
+		return data.build();
 	}
 
 	@Override
