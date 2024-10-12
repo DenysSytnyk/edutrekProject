@@ -21,8 +21,8 @@ public class GroupUpdateDto
 	private String slack;
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private GroupDays lessons;
-	private GroupDays webinars;
+	private GroupDays[] lessons;
+	private GroupDays[] webinars;
 	private ReminderDto reminder;
 	private boolean deactivate;
 	private List<StudentDto> students;

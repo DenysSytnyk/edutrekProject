@@ -28,8 +28,8 @@ public class GroupData
 	private String slack;
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private GroupDays lessons;
-	private GroupDays webinars;
+	private GroupDays[] lessons;
+	private GroupDays[] webinars;
 	private ReminderDto reminder;
 	private boolean deactivate;
 	private boolean status;
@@ -37,7 +37,7 @@ public class GroupData
 	
 	
 	public GroupData(String id, String name, String whatsapp, String skype, String slack, LocalDate startDate,
-			LocalDate endDate, GroupDays lessons, GroupDays webinars, ReminderDto reminder, boolean status, boolean deactivate,
+			LocalDate endDate, GroupDays[] lessons, GroupDays[] webinars, ReminderDto reminder, boolean status, boolean deactivate,
 			List<StudentDto> students) {
 		super();
 		this.id = name;

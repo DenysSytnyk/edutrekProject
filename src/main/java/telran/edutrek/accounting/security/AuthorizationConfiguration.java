@@ -22,8 +22,8 @@ public class AuthorizationConfiguration
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/account", "/auth/account/").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.PUT, "/auth/block/*", "/auth/activate/*").hasRole("ADMIN")
-				.requestMatchers(HttpMethod.POST, "/auth").authenticated()
-				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*").authenticated()
+				.requestMatchers(HttpMethod.POST, "/auth", "/students/add").authenticated()
+				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*", "/students/id/*").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/auth/{login}")
 				.access(new WebExpressionAuthorizationManager("#login == authentication.name or hasRole('ADMIN')"))
