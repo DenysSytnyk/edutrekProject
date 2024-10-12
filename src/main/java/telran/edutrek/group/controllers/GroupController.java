@@ -1,5 +1,7 @@
 package telran.edutrek.group.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,12 @@ public class GroupController
 	@GetMapping("/group/{id}")
 	public GroupDto getGroupById(@PathVariable String id) {
 		return service.getGroupById(id);
+	}
+	
+	@GetMapping("/group")
+	public List<GroupDto> getAllGroups() 
+	{
+		return service.getAllGroups();
 	}
 
 	@PutMapping("/group/add/{groupId}/{studentId}")

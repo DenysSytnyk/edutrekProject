@@ -24,7 +24,7 @@ public class AuthorizationConfiguration
 				.requestMatchers(HttpMethod.PUT, "/auth/block/*", "/auth/activate/*").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/auth", "/students/add", "/group/create").authenticated()
 				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*",
-						"/students/id/*", "/group/*").authenticated()
+						"/students/id/*", "/group/*", "/group").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*",
 						"/group/update/*", "/group/add/*/*", "/group/move/*/*", "/group/archive/*/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/auth/{login}")

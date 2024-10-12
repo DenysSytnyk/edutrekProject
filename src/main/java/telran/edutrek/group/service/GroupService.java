@@ -149,4 +149,10 @@ public class GroupService implements IGroupManagement
 		return getGroup(id).build();
 	}
 
+	@Override
+	public List<GroupDto> getAllGroups() 
+	{
+		return repo.findAll().stream().map(gd -> gd.build()).toList();
+	}
+
 }
