@@ -12,6 +12,10 @@ import org.springframework.web.server.ResponseStatusException;
 import telran.edutrek.group.dto.GroupDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.group.entities.GroupData;
+import telran.edutrek.group.exceptions.GroupExistsExceptions;
+import telran.edutrek.group.exceptions.GroupNotFoundExceptions;
+import telran.edutrek.group.exceptions.StudentExistsInGroupExceptions;
+import telran.edutrek.group.exceptions.StudentNotInGroupException;
 import telran.edutrek.group.repo.GroupRepository;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.entities.StudentContact;
@@ -31,7 +35,7 @@ public class GroupService implements IGroupManagement
 	public GroupDto createGroup(GroupDto group) 
 	{
 		if (repo.existsById(group.getId())) 
-		throw new ResponseStatusException(HttpStatus.CONFLICT, "Group exists");
+		throw new GroupExistsExceptions(group.getId());
 		
 		GroupData data = GroupDto.build(group);
 		repo.save(data);
@@ -61,7 +65,7 @@ public class GroupService implements IGroupManagement
 	private GroupData getGroup(String id) 
 	{
 		return repo.findById(id).orElseThrow(() -> 
-		new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
+		new GroupNotFoundExceptions(id));
 	}
 	
 	private StudentContact getStudent(String id) 
@@ -78,7 +82,7 @@ public class GroupService implements IGroupManagement
 		
 		List<StudentDto> list = data.getStudents();
 		if (list.stream().anyMatch(s -> s.getId() == studentId)) 
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Student exists in group");
+			throw new StudentExistsInGroupExceptions(groupId, student.getSurName());
 		list.add(student.build());
 		
 		data.setStudents(list);
@@ -113,7 +117,7 @@ public class GroupService implements IGroupManagement
 		GroupData group = getGroup(groupId);
 		
 		if (student.getGroup().getId() != group.getId()) 
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Student not in this group");
+			throw new StudentNotInGroupException(groupId, student.getSurName());
 		
 		group.getStudents().remove(student.build());
 		repo.save(group);
@@ -142,10 +146,7 @@ public class GroupService implements IGroupManagement
 	@Override
 	public GroupDto getGroupById(String id) 
 	{
-		GroupData data = repo.findById(id).orElseThrow(() -> 
-		new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
-		
-		return data.build();
+		return getGroup(id).build();
 	}
 
 }
