@@ -1,5 +1,7 @@
 package telran.edutrek.contact.dto;
 
+
+public class UserContactRegisterDto {
 import static telran.edutrek.api.AccountingExceptionsMessages.NOT_BLANK;
 import static telran.edutrek.api.AccountingExceptionsMessages.NOT_NULL;
 

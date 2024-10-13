@@ -1,18 +1,24 @@
 package telran.edutrek.student.dto;
 
-
-
 import java.util.ArrayList;
-
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.utils.Course;
 import telran.edutrek.utils.StatusContact;
 
 @Getter
 @NoArgsConstructor
+public class StudentRegisterDto extends UserContactDto {
+	private GroupDto group;
+	private int cost_course;
+	private Integer[] status_payment;
+
 public class StudentRegisterDto extends UserContactDto
 {
 	private GroupDto group;
@@ -24,8 +30,10 @@ public class StudentRegisterDto extends UserContactDto
 		super(id, name, surName, phone, email, city, course, sourse, comment, statusContact);
 		this.group = group;
 		this.cost_course = cost_course;
+		this.status_payment = new Integer[] { 0, cost_course };
+	}
+
 		this.status_payment = new Integer[] {0, cost_course};
 	}
-	
 	
 }

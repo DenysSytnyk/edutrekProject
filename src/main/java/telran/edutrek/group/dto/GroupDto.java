@@ -1,8 +1,9 @@
 package telran.edutrek.group.dto;
 
+
+public class GroupDto {
 import java.time.LocalDate;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

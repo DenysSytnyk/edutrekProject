@@ -3,6 +3,8 @@ package telran.edutrek.contact.dto;
 import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,9 +28,9 @@ public class UserContactDto {
 	private String comment;
 	private StatusContact statusContact;
 
+
 	static UserContactDto build(UserContact user) {
 		return new UserContactDto(user.getId(), user.getName(), user.getSurName(), user.getPhone(),
 				user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
 	}
-	
 }
