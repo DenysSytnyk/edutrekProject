@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
@@ -13,6 +14,7 @@ import telran.edutrek.contact.exceptions.UserContactExistsException;
 import telran.edutrek.contact.exceptions.UserContactNotFoundException;
 import telran.edutrek.contact.repo.ContactRepository;
 
+@Service
 public class ContactService implements IContactManagement{
 	
 	@Autowired
