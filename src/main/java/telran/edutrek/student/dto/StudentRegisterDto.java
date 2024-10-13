@@ -14,6 +14,7 @@ import telran.edutrek.utils.StatusContact;
 
 @Getter
 @NoArgsConstructor
+
 public class StudentRegisterDto extends UserContactDto {
 	private GroupDto group;
 	private int cost_course;
