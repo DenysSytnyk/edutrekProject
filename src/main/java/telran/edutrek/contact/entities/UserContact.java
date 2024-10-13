@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.utils.Course;
 import telran.edutrek.utils.StatusContact;
 
@@ -32,6 +33,7 @@ public class UserContact {
 			ArrayList<String> sourse, String comment, StatusContact statusContact) {
 		super();
 		this.id = name+surName+phone;
+		this.id = phone;
 		this.name = name;
 		this.surName = surName;
 		this.phone = phone;
@@ -43,5 +45,9 @@ public class UserContact {
 		this.statusContact = statusContact;
 	}
 	
-	
+	public UserContactDto build() {
+		return UserContactDto.builder().id(id).name(name).surName(surName)
+				.phone(phone).email(email).city(city).course(course).course(course)
+				.sourse(sourse).comment(comment).statusContact(statusContact).build();
+	}
 }
