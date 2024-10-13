@@ -1,9 +1,8 @@
 package telran.edutrek.group.dto;
 
-
-public class GroupDto {
 import java.time.LocalDate;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +14,8 @@ import telran.edutrek.utils.GroupDays;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupDto 
+public class GroupRegisterDto 
 {
-	private String id;
 	private String name;
 	private String whatsapp;
 	private String skype;
@@ -28,14 +26,14 @@ public class GroupDto
 	private GroupDays[] webinars;
 	private ReminderDto reminder;
 	private boolean deactivate;
-	private boolean status;
 	private List<StudentDto> students;
 	
-	static public GroupData build(GroupDto group)
+	
+	static public GroupData build(GroupRegisterDto group)
 	{
-		return new GroupData(group.getId(), group.getName(), group.getWhatsapp(),
+		return new GroupData(group.getName(), group.getName(), group.getWhatsapp(),
 				group.getSkype(), group.getSlack(), group.getStartDate(), group.getEndDate(),
 				group.getLessons(), group.getWebinars(), group.getReminder(), group.isDeactivate(),
-				group.isStatus(), group.getStudents());	
+				false, group.getStudents());	
 	}
 }
