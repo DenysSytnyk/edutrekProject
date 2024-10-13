@@ -5,8 +5,6 @@ import java.util.List;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
 import telran.edutrek.contact.dto.ContactUpdateDto;
-import telran.edutrek.contact.dto.UserContactDto;
-import telran.edutrek.contact.dto.UserContactRegisterDto;
 import telran.edutrek.contact.entities.UserContact;
 
 public interface IContactManagement {

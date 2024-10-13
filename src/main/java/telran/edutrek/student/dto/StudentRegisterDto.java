@@ -14,11 +14,12 @@ import telran.edutrek.utils.StatusContact;
 
 @Getter
 @NoArgsConstructor
-public class StudentRegisterDto extends UserContactDto
-{
+
+public class StudentRegisterDto extends UserContactDto {
 	private GroupDto group;
 	private int cost_course;
 	private Integer[] status_payment;
+
 	public StudentRegisterDto(String id, String name, String surName, String phone, String email, String city,
 			Course course, ArrayList<String> sourse, String comment, StatusContact statusContact, GroupDto group,
 			int cost_course) {
@@ -26,7 +27,6 @@ public class StudentRegisterDto extends UserContactDto
 		this.group = group;
 		this.cost_course = cost_course;
 		this.status_payment = new Integer[] { 0, cost_course };
-
 
 		this.status_payment = new Integer[] {0, cost_course};
 	}

@@ -21,6 +21,7 @@ import telran.edutrek.contact.service.IContactManagement;
 @RequestMapping("/contact")
 @RestController
 public class ContactController {
+	
 	@Autowired
 	IContactManagement server;
 
