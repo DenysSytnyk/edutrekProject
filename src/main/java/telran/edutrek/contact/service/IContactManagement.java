@@ -4,6 +4,10 @@ import java.util.List;
 
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
+import telran.edutrek.contact.dto.ContactUpdateDto;
+import telran.edutrek.contact.dto.UserContactDto;
+import telran.edutrek.contact.dto.UserContactRegisterDto;
+import telran.edutrek.contact.entities.UserContact;
 
 public interface IContactManagement {
 	
@@ -13,4 +17,10 @@ public interface IContactManagement {
 	List<UserContactDto> getAllContact();
 	List<UserContactDto> getContactByName(String name);
 	List<UserContactDto> getContactBySurName(String surName);	
+	UserContact getContactById(String id);
+	UserContactDto updateContactById(ContactUpdateDto newContact);
+	List<UserContactDto> getAllContact();
+	List<UserContactDto> getContactByName(String name);
+	List<UserContactDto> getContactBySurName(String surName);	
+
 }

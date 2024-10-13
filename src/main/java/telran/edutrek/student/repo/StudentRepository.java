@@ -5,5 +5,10 @@ import telran.edutrek.student.entities.StudentContact;
 
 public interface StudentRepository extends MongoRepository<StudentContact, String> {
 
-//	Optional<StudentDto> findByName(String name);
+
+import telran.edutrek.student.entities.StudentContact;
+
+public interface StudentRepository extends MongoRepository<StudentContact, String>
+{
+
 }

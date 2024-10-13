@@ -3,7 +3,7 @@ package telran.edutrek.student.dto;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.ArrayList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.edutrek.contact.dto.UserContactDto;
@@ -19,6 +19,11 @@ public class StudentRegisterDto extends UserContactDto {
 	private int cost_course;
 	private Integer[] status_payment;
 
+public class StudentRegisterDto extends UserContactDto
+{
+	private GroupDto group;
+	private int cost_course;
+	private Integer[] status_payment;
 	public StudentRegisterDto(String id, String name, String surName, String phone, String email, String city,
 			Course course, ArrayList<String> sourse, String comment, StatusContact statusContact, GroupDto group,
 			int cost_course) {
@@ -28,4 +33,7 @@ public class StudentRegisterDto extends UserContactDto {
 		this.status_payment = new Integer[] { 0, cost_course };
 	}
 
+		this.status_payment = new Integer[] {0, cost_course};
+	}
+	
 }
