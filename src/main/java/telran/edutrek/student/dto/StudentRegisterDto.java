@@ -14,11 +14,6 @@ import telran.edutrek.utils.StatusContact;
 
 @Getter
 @NoArgsConstructor
-public class StudentRegisterDto extends UserContactDto {
-	private GroupDto group;
-	private int cost_course;
-	private Integer[] status_payment;
-
 public class StudentRegisterDto extends UserContactDto
 {
 	private GroupDto group;
@@ -31,7 +26,7 @@ public class StudentRegisterDto extends UserContactDto
 		this.group = group;
 		this.cost_course = cost_course;
 		this.status_payment = new Integer[] { 0, cost_course };
-	}
+
 
 		this.status_payment = new Integer[] {0, cost_course};
 	}
