@@ -3,6 +3,7 @@ package telran.edutrek.student.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.reminder.exceptions.ReminderDateNotValidException;
 import telran.edutrek.student.dto.PaymentDto;
+import telran.edutrek.student.dto.PaymentUpdateDto;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.dto.StudentRegisterDto;
 import telran.edutrek.student.dto.StudentUpdateDto;
@@ -81,38 +83,46 @@ public class StudentService implements IStudentManagement {
 
 		if (newStudentData.getName() == null) {
 			stud.setName(stud.getName());
+		} else {
+			stud.setName(newStudentData.getName());
 		}
 
 		if (newStudentData.getSurName() == null) {
 			stud.setSurName(stud.getSurName());
+		} else {
+			stud.setSurName(newStudentData.getSurName());
 		}
 
 		if (newStudentData.getPhone() == null) {
 			stud.setPhone(stud.getPhone());
+		} else {
+			stud.setPhone(newStudentData.getPhone());
 		}
 
 		if (newStudentData.getCity() == null) {
 			stud.setCity(stud.getCity());
+		} else {
+			stud.setCity(newStudentData.getCity());
 		}
 
 		if (newStudentData.getEmail() == null) {
 			stud.setEmail(stud.getEmail());
+		} else {
+			stud.setEmail(newStudentData.getEmail());
 		}
 
 		if (newStudentData.getCourse() == null) {
 			stud.setCourse(stud.getCourse());
+		} else {
+			stud.setCourse(newStudentData.getCourse());
 		}
 
 		if (newStudentData.getStatusContact() == null) {
 			stud.setStatusContact(stud.getStatusContact());
+		} else {
+			stud.setStatusContact(newStudentData.getStatusContact());
 		}
 
-		stud.setName(newStudentData.getName());
-		stud.setSurName(newStudentData.getSurName());
-		stud.setPhone(newStudentData.getPhone());
-		stud.setEmail(newStudentData.getEmail());
-		stud.setCourse(newStudentData.getCourse());
-		stud.setStatusContact(newStudentData.getStatusContact());
 		stud.setCost_course(newStudentData.getCost_course());
 
 		repo.save(stud);
@@ -121,7 +131,7 @@ public class StudentService implements IStudentManagement {
 	}
 
 	@Override
-	public boolean addCommentbyId(String id, String comment) {
+	public boolean updateCommentbyId(String id, String comment) {
 		if (!repo.existsById(id)) {
 			throw new StudentNotFoundException(id);
 		}
@@ -165,6 +175,40 @@ public class StudentService implements IStudentManagement {
 		stud.setReminder(reminder);
 		repo.save(stud);
 		return true;
+	}
+
+	@Override
+	public List<PaymentDto> updatePayment(String id, LocalDateTime date, PaymentUpdateDto payment) {
+		if (!repo.existsById(id)) {
+			throw new StudentNotFoundException(id);
+		}
+		StudentContact stud = getStudentContact(id);
+		List<PaymentDto> newPayments = stud.getPayments().stream().filter(paym -> !paym.getDate().isEqual(date))
+				.collect(Collectors.toList());
+		PaymentDto updatedPayment = new PaymentDto(date, payment.getType(), payment.getAmount(),
+				payment.getInstallments(), payment.getDetails());
+		newPayments.add(updatedPayment);
+		stud.setPayments(newPayments);
+		repo.save(stud);
+		return newPayments;
+
+	}
+
+	@Override
+	public List<PaymentDto> deletePaymentByDate(String id, LocalDateTime date) {
+		if (!repo.existsById(id)) {
+			throw new StudentNotFoundException(id);
+		}
+		StudentContact stud = getStudentContact(id);
+		List<PaymentDto> oldPayments = stud.getPayments().stream().filter(payment -> payment.getDate().isEqual(date))
+				.collect(Collectors.toList());
+
+		List<PaymentDto> newPayments = stud.getPayments().stream().filter(payment -> !payment.getDate().isEqual(date))
+				.collect(Collectors.toList());
+		stud.setPayments(newPayments);
+		repo.save(stud);
+
+		return oldPayments;
 	}
 
 }
