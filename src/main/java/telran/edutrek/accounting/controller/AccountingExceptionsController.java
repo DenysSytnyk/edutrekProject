@@ -1,6 +1,5 @@
 package telran.edutrek.accounting.controller;
 
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +20,7 @@ import static telran.edutrek.api.AccountingExceptionsMessages.*;
 @Slf4j
 public class AccountingExceptionsController 
 {
-	private ResponseEntity<String> returnResponse(String message, HttpStatus status)
-	{
-		log.error(message);
-		return new ResponseEntity<String>(message, status);
-	}
-	
+
 	@ExceptionHandler(UserContactExistsException.class)
 	ResponseEntity<String> handlerUsercontactExistException(UserExistsException e)
 	{

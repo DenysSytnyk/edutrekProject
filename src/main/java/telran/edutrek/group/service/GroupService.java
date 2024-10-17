@@ -2,6 +2,7 @@ package telran.edutrek.group.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,14 @@ import org.springframework.web.server.ResponseStatusException;
 import telran.edutrek.group.dto.GroupDto;
 import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
+import telran.edutrek.group.dto.StudentForGroupDto;
 import telran.edutrek.group.entities.GroupData;
 import telran.edutrek.group.exceptions.GroupExistsExceptions;
 import telran.edutrek.group.exceptions.GroupNotFoundExceptions;
 import telran.edutrek.group.exceptions.StudentExistsInGroupExceptions;
 import telran.edutrek.group.exceptions.StudentNotInGroupException;
 import telran.edutrek.group.repo.GroupRepository;
+import telran.edutrek.student.dto.GroupForStudentDto;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.entities.StudentContact;
 import telran.edutrek.student.repo.StudentRepository;
@@ -36,11 +39,25 @@ public class GroupService implements IGroupManagement
 	public GroupDto createGroup(GroupRegisterDto group) 
 	{
 		if (repo.existsById(group.getName())) 
-		throw new GroupExistsExceptions(group.getName());
+			throw new GroupExistsExceptions(group.getName());
 		
 		GroupData data = GroupRegisterDto.build(group);
+		
+		if (data.getStudents() !=null) 
+			addGroupForStudents(data.getStudents(), GroupForStudentDto.toGroup(data));
+
 		repo.save(data);
 		return data.build();
+	}
+
+	private void addGroupForStudents(List<StudentForGroupDto> students, GroupForStudentDto group) 
+	{
+		students.forEach(s -> 
+		{
+			StudentContact stud = getStudent(s.getId());
+			stud.setGroup(group);
+			studRepo.save(stud);
+		});
 	}
 
 	@Override
@@ -81,13 +98,18 @@ public class GroupService implements IGroupManagement
 		GroupData data = getGroup(groupId);
 		StudentContact student = getStudent(studentId);
 		
-		List<StudentDto> list = data.getStudents();
+		List<StudentForGroupDto> list = data.getStudents();
+		if (list == null)
+			list = new ArrayList<StudentForGroupDto>();
 		if (list.stream().anyMatch(s -> s.getId() == studentId)) 
 			throw new StudentExistsInGroupExceptions(groupId, student.getSurName());
-		list.add(student.build());
-		
+	
+		list.add(StudentForGroupDto.toStudent(student));
+		student.setGroup(GroupForStudentDto.toGroup(data));
 		data.setStudents(list);
+		
 		repo.save(data);
+		studRepo.save(student);
 		
 		return true;
 	}
@@ -98,14 +120,7 @@ public class GroupService implements IGroupManagement
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
 		
-		if (student.getGroup() !=null) 
-		{
-			GroupData currentGroup = getGroup(student.getGroup().getId());
-			currentGroup.getStudents().remove(student.build());
-			repo.save(currentGroup);
-		}
-		
-		student.setGroup(group.build());
+		student.setGroup(GroupForStudentDto.toGroup(group));
 		addStudent(groupId, studentId);
 		
 		return true;
@@ -117,10 +132,10 @@ public class GroupService implements IGroupManagement
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
 		
-		if (student.getGroup().getId() != group.getId()) 
+		if (!student.getGroup().getName().equals(group.getName())) 
 			throw new StudentNotInGroupException(groupId, student.getSurName());
 		
-		group.getStudents().remove(student.build());
+		group.getStudents().remove(StudentForGroupDto.toStudent(student));
 		repo.save(group);
 		
 		student.setGroup(null);
@@ -154,6 +169,31 @@ public class GroupService implements IGroupManagement
 	public List<GroupDto> getAllGroups() 
 	{
 		return repo.findAll().stream().map(gd -> gd.build()).toList();
+	}
+
+	@Override
+	public GroupDto deleteGroup(String id) 
+	{
+		GroupData group =  repo.findById(id).orElseThrow(() -> 
+		new GroupNotFoundExceptions(id));
+		
+		repo.deleteById(id);
+		return group.build();
+	}
+
+	@Override
+	public boolean removeStudentFromGroup(String groupId, String studentId)
+	{
+		StudentContact student = getStudent(studentId);
+		GroupData group = getGroup(groupId);
+		
+	
+		group.getStudents().removeIf((s) -> s.getId().equals(studentId));
+		repo.save(group);
+		
+		studRepo.save(student);
+		
+		return true;
 	}
 
 }

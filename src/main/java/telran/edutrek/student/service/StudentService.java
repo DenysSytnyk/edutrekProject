@@ -27,17 +27,15 @@ public class StudentService implements IStudentManagement {
 
 	@Override
 	public StudentDto createStudent(StudentRegisterDto student) {
-		if (repo.existsById(student.getId())) {
-			throw new StudentAlreadyExistsException(student.getId());
-		}
-		StudentContact stud = new StudentContact(student.getId(), student.getName(), student.getSurName(),
+	
+		StudentContact stud = new StudentContact(student.getName(), student.getSurName(),
 				student.getPhone(), student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(),
 				student.getComment(), student.getStatusContact(), student.getGroup(), student.getCost_course(), null,
 				null, student.getStatus_payment(), null);
 
-		repo.save(stud);
+		StudentContact s = repo.save(stud);
 
-		return new StudentDto(student.getId(), student.getName(), student.getSurName(), student.getPhone(),
+		return new StudentDto(s.getId(), student.getName(), student.getSurName(), student.getPhone(),
 				student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(), student.getComment(),
 				student.getStatusContact(), student.getGroup(), student.getCost_course(), null, null,
 				student.getStatus_payment(), null);

@@ -19,7 +19,7 @@ import telran.edutrek.utils.StatusContact;
 @NoArgsConstructor
 public class StudentDto extends UserContactDto
 {
-	private GroupDto group;
+	private GroupForStudentDto group;
 	private int cost_course;
 	private List<PaymentDto> payments;
 	private LinkedList<String> logs;
@@ -27,7 +27,7 @@ public class StudentDto extends UserContactDto
 	private ReminderDto reminder;
 	
 	public StudentDto(String id, String name, String surName, String phone, String email, String city, Course course,
-			ArrayList<String> sourse, String comment, StatusContact statusContact, GroupDto group, int cost_course,
+			ArrayList<String> sourse, String comment, StatusContact statusContact, GroupForStudentDto group, int cost_course,
 			List<PaymentDto> payments, LinkedList<String> logs, Integer[] status_payment, ReminderDto reminder) {
 		super(id, name, surName, phone, email, city, course, sourse, comment, statusContact);
 		this.group = group;
