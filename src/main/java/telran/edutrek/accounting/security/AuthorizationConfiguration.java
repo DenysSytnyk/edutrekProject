@@ -22,7 +22,7 @@ public class AuthorizationConfiguration {
 				.requestMatchers(HttpMethod.PUT, "/auth/block/*", "/auth/activate/*").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.POST, "/auth", "/students/add", "/group/create","/contact/add").authenticated()
 				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*",
-						"/students/id/*", "/group/*", "/group", "/students/name/*", "/students","/contact/id/*","/contact/all","/contact/all/*").authenticated()
+						"/students/id/*", "/group/*", "/group", "/students/name/*", "/students","/contact/id/*","/contact/all","/contact/all/name/*","/contact/all/surName/*").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*",
 						"/group/update/*", "/group/add/*/*", "/group/move/*/*", "/group/archive/*/*", "/students/comment/*", "/students/payments/*", 
 						"/students/reminder/*", "/students/update/*","/contact/update").authenticated()

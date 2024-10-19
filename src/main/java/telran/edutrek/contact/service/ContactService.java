@@ -27,14 +27,19 @@ public class ContactService implements IContactManagement{
 
 	@Override
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
-		if(repoContact.existsById(user.getId()))
-			throw new UserContactExistsException(user.getId());
-		UserContact us=new UserContact(user.getId(), user.getName(), user.getSurName(),
-				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
-		repoContact.save(us);
+		try {
+			if(repoContact.existsById(user.getId()))
+				throw new UserContactExistsException(user.getId());
+			UserContact us=new UserContact(user.getId(), user.getName(), user.getSurName(),
+					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
+			repoContact.save(us);
+			
+		} catch (Exception e) {
+			
+		}
 		return new UserContactDto(user.getId(), user.getName(), user.getSurName(), 
-				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
-				user.getComment(), user.getStatusContact());
+					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
+					user.getComment(), user.getStatusContact());
 	}
 
 	@Override
@@ -54,46 +59,48 @@ public class ContactService implements IContactManagement{
 
 	@Override
 	public UserContactDto updateContactById(ContactUpdateDto newContact) {
-		if(!repoContact.existsById(newContact.getId()))
-			throw new UserContactNotFoundException(newContact.getId());
-		UserContact user=getContactById(newContact.getId());
-		if(newContact.getName()==null) {
-			user.setName(user.getName());
-		}
-		if(newContact.getSurName()==null) {
-			user.setSurName(user.getSurName());
-		}
-		if(newContact.getPhone()==null) {
-			user.setPhone(user.getPhone());
-		}
-		if(newContact.getEmail()==null) {
-			user.setEmail(user.getEmail());
-		}
-		if(newContact.getCity()==null) {
-			user.setCity(user.getCity());
-		}
-		if(newContact.getCourse()==null) {
-			user.setCourse(user.getCourse());
-		}
-		if(newContact.getSourse()==null) {
-			user.setSourse(user.getSourse());
-		}
-		if(newContact.getComment()==null) {
-			user.setComment(user.getComment());
-		}
-		if(newContact.getStatusContact()==null) {
-			user.setStatusContact(user.getStatusContact());
-		}
-		user.setName(newContact.getName());
-		user.setPhone(newContact.getPhone());
-		user.setEmail(newContact.getEmail());
-		user.setCity(newContact.getCity());
-		user.setCourse(newContact.getCourse());
-		user.setSourse(newContact.getSourse());
-		user.setComment(newContact.getComment());
-		user.setStatusContact(newContact.getStatusContact());
-		repoContact.save(user);
-		return user.build();
+		
+			if(!repoContact.existsById(newContact.getId()))
+				throw new UserContactNotFoundException(newContact.getId());
+			UserContact user=getContactById(newContact.getId());
+			if(newContact.getName()==null) {
+				user.setName(user.getName());
+			}
+			if(newContact.getSurName()==null) {
+				user.setSurName(user.getSurName());
+			}
+			if(newContact.getPhone()==null) {
+				user.setPhone(user.getPhone());
+			}
+			if(newContact.getEmail()==null) {
+				user.setEmail(user.getEmail());
+			}
+			if(newContact.getCity()==null) {
+				user.setCity(user.getCity());
+			}
+			if(newContact.getCourse()==null) {
+				user.setCourse(user.getCourse());
+			}
+			if(newContact.getSourse()==null) {
+				user.setSourse(user.getSourse());
+			}
+			if(newContact.getComment()==null) {
+				user.setComment(user.getComment());
+			}
+			if(newContact.getStatusContact()==null) {
+				user.setStatusContact(user.getStatusContact());
+			}
+			user.setName(newContact.getName());
+			user.setPhone(newContact.getPhone());
+			user.setEmail(newContact.getEmail());
+			user.setCity(newContact.getCity());
+			user.setCourse(newContact.getCourse());
+			user.setSourse(newContact.getSourse());
+			user.setComment(newContact.getComment());
+			user.setStatusContact(newContact.getStatusContact());
+			repoContact.save(user);
+			return user.build();
+		
 	}
 
 	@Override
