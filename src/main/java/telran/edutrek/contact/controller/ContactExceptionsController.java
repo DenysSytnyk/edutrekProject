@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
-import telran.edutrek.accounting.exceptions.UserExistsException;
-import telran.edutrek.accounting.exceptions.UserNotFoundException;
 import telran.edutrek.contact.exceptions.UserContactExistsException;
 import telran.edutrek.contact.exceptions.UserContactNotFoundException;
 import static telran.edutrek.api.AccountingExceptionsMessages.*;
