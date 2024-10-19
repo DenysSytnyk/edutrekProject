@@ -20,13 +20,13 @@ public class AuthorizationConfiguration {
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/account", "/auth/account/").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.PUT, "/auth/block/*", "/auth/activate/*").hasRole("ADMIN")
-				.requestMatchers(HttpMethod.POST, "/auth", "/students/add", "/group/create").authenticated()
+				.requestMatchers(HttpMethod.POST, "/auth", "/students/add", "/group/create","/contact/add").authenticated()
 				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*",
-						"/students/id/*", "/group/*", "/group", "/students/name/*", "/students").authenticated()
+						"/students/id/*", "/group/*", "/group", "/students/name/*", "/students","/contact/id/*","/contact/all","/contact/all/*").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*",
 						"/group/update/*", "/group/add/*/*", "/group/move/*/*", "/group/archive/*/*", "/students/comment/*", "/students/payments/*", 
-						"/students/reminder/*", "/students/update/*").authenticated()
-				.requestMatchers(HttpMethod.DELETE, "/students/*").authenticated()
+						"/students/reminder/*", "/students/update/*","/contact/update").authenticated()
+				.requestMatchers(HttpMethod.DELETE, "/students/*","/contact/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/auth/{login}")
 				.access(new WebExpressionAuthorizationManager("#login == authentication.name or hasRole('ADMIN')"))
 				.anyRequest().denyAll());

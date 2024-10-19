@@ -1,5 +1,6 @@
 package telran.edutrek.contact.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,20 +14,24 @@ import telran.edutrek.contact.entities.UserContact;
 import telran.edutrek.contact.exceptions.UserContactExistsException;
 import telran.edutrek.contact.exceptions.UserContactNotFoundException;
 import telran.edutrek.contact.repo.ContactRepository;
+import telran.edutrek.student.dto.StudentDto;
+import telran.edutrek.student.repo.StudentRepository;
 
 @Service
 public class ContactService implements IContactManagement{
 	
 	@Autowired
-	ContactRepository repo;
+	ContactRepository repoContact;
+	@Autowired
+	StudentRepository repoStudent;
 
 	@Override
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
-		if(repo.existsById(user.getId()))
+		if(repoContact.existsById(user.getId()))
 			throw new UserContactExistsException(user.getId());
 		UserContact us=new UserContact(user.getId(), user.getName(), user.getSurName(),
 				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
-		repo.save(us);
+		repoContact.save(us);
 		return new UserContactDto(user.getId(), user.getName(), user.getSurName(), 
 				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
 				user.getComment(), user.getStatusContact());
@@ -35,21 +40,21 @@ public class ContactService implements IContactManagement{
 	@Override
 	public UserContactDto removeContactById(String id) {
 		UserContact user=getContactById(id);
-		repo.delete(user);
+		repoContact.delete(user);
 		return user.build();
 	}
 
 	@Override
 	public UserContact getContactById(String id) {
 		
-		return repo.findById(id).orElseThrow(()->
+		return repoContact.findById(id).orElseThrow(()->
 		new UserContactNotFoundException(id)
 				);
 	}
 
 	@Override
 	public UserContactDto updateContactById(ContactUpdateDto newContact) {
-		if(!repo.existsById(newContact.getId()))
+		if(!repoContact.existsById(newContact.getId()))
 			throw new UserContactNotFoundException(newContact.getId());
 		UserContact user=getContactById(newContact.getId());
 		if(newContact.getName()==null) {
@@ -87,14 +92,18 @@ public class ContactService implements IContactManagement{
 		user.setSourse(newContact.getSourse());
 		user.setComment(newContact.getComment());
 		user.setStatusContact(newContact.getStatusContact());
-		repo.save(user);
+		repoContact.save(user);
 		return user.build();
 	}
 
 	@Override
 	public List<UserContactDto> getAllContact() {
-		List<UserContactDto> res=repo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
-		return res;
+		List<UserContactDto> res=repoContact.findAll().stream().map(u->u.build()).collect(Collectors.toList());
+		List<StudentDto> res1=repoStudent.findAll().stream().map(u->u.build()).collect(Collectors.toList());
+		List<UserContactDto> resultat = new ArrayList<UserContactDto>();
+		resultat.addAll(res);
+		resultat.addAll(res1);	
+		return resultat;
 	}
 
 	@Override
