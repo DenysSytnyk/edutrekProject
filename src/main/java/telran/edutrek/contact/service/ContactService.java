@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
@@ -18,6 +19,7 @@ import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.repo.StudentRepository;
 
 @Service
+@Slf4j
 public class ContactService implements IContactManagement{
 	
 	@Autowired
@@ -29,7 +31,9 @@ public class ContactService implements IContactManagement{
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
 		try {
 			if(repoContact.existsById(user.getId()))
+				
 				throw new UserContactExistsException(user.getId());
+				
 			UserContact us=new UserContact(user.getId(), user.getName(), user.getSurName(),
 					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
 			repoContact.save(us);

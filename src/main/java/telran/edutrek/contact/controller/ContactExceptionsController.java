@@ -23,7 +23,7 @@ public class ContactExceptionsController
 	}
 
 	@ExceptionHandler(UserContactNotFoundException.class)
-	ResponseEntity<String> handlerUserContactNotFoundException(UserContactExistsException e)
+	ResponseEntity<String> handlerUserContactNotFoundException(UserContactNotFoundException e)
 	{
 		log.error(e.getMessage());
 		String message = USER_NOT_FOUND + e.getMessage();
