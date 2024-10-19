@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import telran.edutrek.group.entities.GroupData;
+import telran.edutrek.group.repo.GroupRepository;
 import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.reminder.exceptions.ReminderDateNotValidException;
 import telran.edutrek.student.dto.PaymentDto;
@@ -15,15 +17,18 @@ import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.dto.StudentRegisterDto;
 import telran.edutrek.student.dto.StudentUpdateDto;
 import telran.edutrek.student.entities.StudentContact;
-import telran.edutrek.student.exceptions.StudentAlreadyExistsException;
 import telran.edutrek.student.exceptions.StudentNotFoundException;
 import telran.edutrek.student.repo.StudentRepository;
+
 
 @Service
 public class StudentService implements IStudentManagement {
 
 	@Autowired
 	StudentRepository repo;
+	
+	@Autowired
+	GroupRepository groupRepo;
 
 	@Override
 	public StudentDto createStudent(StudentRegisterDto student) {
@@ -44,6 +49,12 @@ public class StudentService implements IStudentManagement {
 	@Override
 	public StudentDto removeStudentsById(String id) {
 		StudentContact student = getStudentContact(id);
+		student.getGroup().forEach(g -> 
+		{
+			GroupData group = groupRepo.findById(g.getId()).orElse(null);
+			group.getStudents().removeIf((s) -> s.getId().equals(id));
+			groupRepo.save(group);
+		});
 		repo.delete(student);
 		return student.build();
 	}

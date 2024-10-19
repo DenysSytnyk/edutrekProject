@@ -3,6 +3,7 @@ package telran.edutrek.group.service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,14 @@ public class GroupService implements IGroupManagement
 		students.forEach(s -> 
 		{
 			StudentContact stud = getStudent(s.getId());
-			stud.setGroup(group);
+			if (stud.getGroup() != null) 
+			{
+				stud.getGroup().add(group);
+			}
+			else {
+				stud.setGroup(new ArrayList<GroupForStudentDto>(Arrays.asList(group)));
+			}
+			
 			studRepo.save(stud);
 		});
 	}
@@ -101,11 +109,17 @@ public class GroupService implements IGroupManagement
 		List<StudentForGroupDto> list = data.getStudents();
 		if (list == null)
 			list = new ArrayList<StudentForGroupDto>();
-		if (list.stream().anyMatch(s -> s.getId() == studentId)) 
+		if (list.stream().anyMatch(s -> s.getId().equals(studentId))) 
 			throw new StudentExistsInGroupExceptions(groupId, student.getSurName());
 	
 		list.add(StudentForGroupDto.toStudent(student));
-		student.setGroup(GroupForStudentDto.toGroup(data));
+		if (student.getGroup() != null) 
+		{
+			student.getGroup().add(GroupForStudentDto.toGroup(data));
+		}
+		else {
+			student.setGroup(new ArrayList<GroupForStudentDto>(Arrays.asList(GroupForStudentDto.toGroup(data))));
+		}
 		data.setStudents(list);
 		
 		repo.save(data);
@@ -119,9 +133,15 @@ public class GroupService implements IGroupManagement
 	{
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
+		List<StudentForGroupDto> list = group.getStudents();
 		
-		student.setGroup(GroupForStudentDto.toGroup(group));
+		if (list.stream().anyMatch(s -> s.getId().equals(studentId))) 
+			throw new StudentExistsInGroupExceptions(groupId, student.getSurName());
+		
+		student.getGroup().add(GroupForStudentDto.toGroup(group));
 		addStudent(groupId, studentId);
+		
+		studRepo.save(student);
 		
 		return true;
 	}
@@ -132,7 +152,7 @@ public class GroupService implements IGroupManagement
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
 		
-		if (!student.getGroup().getName().equals(group.getName())) 
+		if (!student.getGroup().stream().anyMatch((g) -> g.getId().equals(group.getId()))) 
 			throw new StudentNotInGroupException(groupId, student.getSurName());
 		
 		group.getStudents().remove(StudentForGroupDto.toStudent(student));
@@ -187,10 +207,13 @@ public class GroupService implements IGroupManagement
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
 		
+		if (!student.getGroup().stream().anyMatch((g) -> g.getId().equals(group.getId()))) 
+			throw new StudentNotInGroupException(groupId, student.getSurName());
 	
 		group.getStudents().removeIf((s) -> s.getId().equals(studentId));
-		repo.save(group);
+		student.getGroup().removeIf((g) -> g.getId().equals(groupId));
 		
+		repo.save(group);
 		studRepo.save(student);
 		
 		return true;

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.group.dto.StudentForGroupDto;
 import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.student.dto.GroupForStudentDto;
 import telran.edutrek.student.dto.PaymentDto;
@@ -38,7 +39,7 @@ public class StudentContact
 	private ArrayList<String> sourse;
 	private String comment;
 	private StatusContact statusContact;
-	private GroupForStudentDto group;
+	private List<GroupForStudentDto> group;
 	private int cost_course;
 	private List<PaymentDto> payments;
 	private LinkedList<String> logs;
@@ -57,7 +58,7 @@ public class StudentContact
 
 
 	public StudentContact(String name, String surName, String phone, String email, String city, Course course,
-			ArrayList<String> sourse, String comment, StatusContact statusContact, GroupForStudentDto group,
+			ArrayList<String> sourse, String comment, StatusContact statusContact, List<GroupForStudentDto> group,
 			int cost_course, List<PaymentDto> payments, LinkedList<String> logs, Integer[] status_payment,
 			ReminderDto reminder) {
 		super();
