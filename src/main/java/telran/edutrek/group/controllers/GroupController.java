@@ -40,6 +40,11 @@ public class GroupController
 		return service.getGroupById(id);
 	}
 	
+	@GetMapping("/group/name{name}")
+	public GroupDto getGroupByName(@PathVariable String name) {
+		return service.getGroupByName(name);
+	}
+	
 	@DeleteMapping("/group/{id}")
 	public GroupDto deleteGroupById(@PathVariable String id) {
 		return service.deleteGroup(id);
