@@ -40,7 +40,7 @@ public class GroupController
 		return service.getGroupById(id);
 	}
 	
-	@GetMapping("/group/name{name}")
+	@GetMapping("/group/name/{name}")
 	public GroupDto getGroupByName(@PathVariable String name) {
 		return service.getGroupByName(name);
 	}
