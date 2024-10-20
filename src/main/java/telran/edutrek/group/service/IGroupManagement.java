@@ -13,6 +13,7 @@ public interface IGroupManagement
 	GroupDto deleteGroup(String id);
 	GroupDto updateGroupById(String id, GroupUpdateDto newGroupData);
 	GroupDto getGroupById(String id);
+	GroupDto getGroupByName(String name);
 	List<GroupDto> getAllGroups();
 	boolean addStudent(String groupId, String studentId);
 	boolean moveStudent(String groupId, String studentId);

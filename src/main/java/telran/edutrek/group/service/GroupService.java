@@ -219,4 +219,11 @@ public class GroupService implements IGroupManagement
 		return true;
 	}
 
+	@Override
+	public GroupDto getGroupByName(String name) 
+	{
+		return repo.findByName(name).orElseThrow(() -> 
+		new GroupNotFoundExceptions(name));
+	}
+
 }
