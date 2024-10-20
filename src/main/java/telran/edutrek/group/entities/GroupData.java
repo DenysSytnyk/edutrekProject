@@ -3,15 +3,14 @@ package telran.edutrek.group.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import telran.edutrek.group.dto.GroupDto;
+import telran.edutrek.group.dto.StudentForGroupDto;
 import telran.edutrek.reminder.dto.ReminderDto;
-import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.utils.GroupDays;
 
 @Getter
@@ -19,7 +18,7 @@ import telran.edutrek.utils.GroupDays;
 @Document(collection = "edutrek_groups")
 public class GroupData 
 {
-	@Id
+	
 	@Setter(value = AccessLevel.NONE)
 	private String id;
 	private String name;
@@ -33,14 +32,13 @@ public class GroupData
 	private ReminderDto reminder;
 	private boolean deactivate;
 	private boolean status;
-	private List<StudentDto> students;
+	private List<StudentForGroupDto> students;
 	
 	
-	public GroupData(String id, String name, String whatsapp, String skype, String slack, LocalDate startDate,
+	public GroupData(String name, String whatsapp, String skype, String slack, LocalDate startDate,
 			LocalDate endDate, GroupDays[] lessons, GroupDays[] webinars, ReminderDto reminder, boolean status, boolean deactivate,
-			List<StudentDto> students) {
+			List<StudentForGroupDto> students) {
 		super();
-		this.id = name;
 		this.name = name;
 		this.whatsapp = whatsapp;
 		this.skype = skype;

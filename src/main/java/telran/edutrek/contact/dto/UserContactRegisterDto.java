@@ -20,7 +20,6 @@ import telran.edutrek.utils.StatusContact;
 @Getter
 public class UserContactRegisterDto {
 
-	private String id;
 	@NotNull(message = NOT_NULL)
 	@NotBlank(message = NOT_BLANK)
 	private String name;

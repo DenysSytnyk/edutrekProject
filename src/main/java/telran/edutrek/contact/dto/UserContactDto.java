@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import telran.edutrek.contact.entities.UserContact;
 import telran.edutrek.utils.Course;
 import telran.edutrek.utils.StatusContact;
