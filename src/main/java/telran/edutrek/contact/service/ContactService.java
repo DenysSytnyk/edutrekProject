@@ -29,7 +29,7 @@ public class ContactService implements IContactManagement{
 
 	@Override
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
-		try {
+		
 			if(repoContact.existsById(user.getId()))
 				
 				throw new UserContactExistsException(user.getId());
@@ -38,9 +38,7 @@ public class ContactService implements IContactManagement{
 					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
 			repoContact.save(us);
 			
-		} catch (Exception e) {
-			
-		}
+		
 		return new UserContactDto(user.getId(), user.getName(), user.getSurName(), 
 					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
 					user.getComment(), user.getStatusContact());
