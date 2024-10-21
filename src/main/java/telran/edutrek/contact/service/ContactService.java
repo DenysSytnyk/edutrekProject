@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
@@ -18,6 +19,7 @@ import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.repo.StudentRepository;
 
 @Service
+@Slf4j
 public class ContactService implements IContactManagement{
 	
 	@Autowired
@@ -107,7 +109,7 @@ public class ContactService implements IContactManagement{
 			res.addAll(resCont);
 			return res;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			log.error(e.getMessage());
 			return null;
 		}
 		
