@@ -17,8 +17,7 @@ import telran.edutrek.utils.StatusContact;
 public class UserContact {
 
 
-	@Setter(value = AccessLevel.NONE)
-	private String id;
+	
 	private String name;
 	private String surName;
 	private String phone;
@@ -43,7 +42,7 @@ public class UserContact {
 	}
 	
 	public UserContactDto build() {
-		return UserContactDto.builder().id(id).name(name).surName(surName)
+		return UserContactDto.builder().name(name).surName(surName)
 				.phone(phone).email(email).city(city).course(course).course(course)
 				.sourse(sourse).comment(comment).statusContact(statusContact).build();
 	}

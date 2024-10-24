@@ -36,7 +36,7 @@ public class ContactService implements IContactManagement{
 		UserContact us=new UserContact(user.getName(), user.getSurName(),
 				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
 		us = repo.save(us);
-		return new UserContactDto(us.getId(), user.getName(), user.getSurName(), 
+		return new UserContactDto( user.getName(), user.getSurName(), 
 				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
 				user.getComment(), user.getStatusContact());
 	}

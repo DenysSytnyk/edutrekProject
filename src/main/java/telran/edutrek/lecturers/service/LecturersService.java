@@ -1,21 +1,19 @@
 package telran.edutrek.lecturers.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import telran.edutrek.contact.entities.UserContact;
-import telran.edutrek.contact.exceptions.UserContactExistsException;
-import telran.edutrek.contact.exceptions.UserContactNotFoundException;
-import telran.edutrek.group.dto.StudentForGroupDto;
 import telran.edutrek.lecturers.dto.LecturersDto;
 import telran.edutrek.lecturers.dto.LecturersRegisterDto;
 import telran.edutrek.lecturers.dto.LecturersUpdateDto;
 import telran.edutrek.lecturers.entities.LecturersContact;
+import telran.edutrek.lecturers.exeptions.GroupToLecturerExistsException;
+import telran.edutrek.lecturers.exeptions.GroupToLecturerNotExistsException;
+import telran.edutrek.lecturers.exeptions.LecturerExistsException;
+import telran.edutrek.lecturers.exeptions.LecturerNotFoundException;
 import telran.edutrek.lecturers.repo.LecturerRepository;
 import telran.edutrek.student.dto.GroupForStudentDto;
 
@@ -28,10 +26,11 @@ public class LecturersService implements ILecturersManagement{
 
 	@Override
 	public LecturersDto createLecturer(LecturersRegisterDto lecturer) {
-		if(repo.existsById(lecturer.getPhone()))
+		if(repo.existsById(lecturer.getPhone())) {
 			throw new LecturerExistsException(lecturer.getPhone());
-		LecturersContact lecturerContact=new LecturersContact(lecturerContact.getId(), lecturerContact.getName(), lecturerContact.getSurName(), lecturerContact.getPhone(),
-				lecturerContact.getEmail(), lecturerContact.getCity(), null, lecturerContact.getSourse(), lecturerContact.getComment(),lecturerContact.getStatusContact(), lecturerContact.getGroup());
+		}
+		LecturersContact lecturerContact=new LecturersContact(lecturer.getId(), lecturer.getName(), lecturer.getSurName(), lecturer.getPhone(),
+				lecturer.getEmail(), lecturer.getCity(), null, lecturer.getSourse(), lecturer.getComment(),lecturer.getStatusContact(), lecturer.getGroup());
 		repo.save(lecturerContact);
 		return lecturerContact.build();
 	}
@@ -44,10 +43,10 @@ public class LecturersService implements ILecturersManagement{
 	}
 
 	@Override
-	public LecturersDto updateLecturer(LecturersUpdateDto  newLecturer) {
-		if(!repo.existsById(newLecturer.get))
-			throw new UserContactNotFoundException(newLecturer.getId());
-		UserContact user=getContactById(newLecturer.getId());
+	public LecturersDto updateLecturer(String id, LecturersUpdateDto  newLecturer) {
+		if(!repo.existsById(id))
+			throw new LecturerNotFoundException(id);
+		LecturersContact user=getLecturer(newLecturer.getPhone());
 		if(newLecturer.getName()==null) {
 			user.setName(user.getName());
 		}
@@ -63,25 +62,17 @@ public class LecturersService implements ILecturersManagement{
 		if(newLecturer.getCity()==null) {
 			user.setCity(user.getCity());
 		}
-		if(newLecturer.getCourse()==null) {
-			user.setCourse(user.getCourse());
-		}
-		if(newLecturer.getSourse()==null) {
-			user.setSourse(user.getSourse());
-		}
-		if(newLecturer.getComment()==null) {
-			user.setComment(user.getComment());
-		}
 		if(newLecturer.getStatusContact()==null) {
 			user.setStatusContact(user.getStatusContact());
+		}
+		if(newLecturer.getGroup()==null) {
+			user.setGroup(user.getGroup());
 		}
 		user.setName(newLecturer.getName());
 		user.setPhone(newLecturer.getPhone());
 		user.setEmail(newLecturer.getEmail());
 		user.setCity(newLecturer.getCity());
-		user.setCourse(newLecturer.getCourse());
-		user.setSourse(newLecturer.getSourse());
-		user.setComment(newLecturer.getComment());
+		user.setGroup(newLecturer.getGroup());
 		user.setStatusContact(newLecturer.getStatusContact());
 		repo.save(user);
 		return user.build();
@@ -94,8 +85,7 @@ public class LecturersService implements ILecturersManagement{
 	}
 	
 	public LecturersContact getLecturer(String id) {
-		return repo.findById(id).orElseThrow(
-				new LecturerNotFoundException(id));
+		return repo.findById(id).orElseThrow(()-> new LecturerNotFoundException(id));
 		
 	}
 
@@ -115,14 +105,33 @@ public class LecturersService implements ILecturersManagement{
 
 	@Override
 	public LecturersDto addGroupToLecturer(String id, GroupForStudentDto group) {
-		// TODO Auto-generated method stub
-		return null;
+		LecturersContact lecturer=getLecturer(id);	
+		List<GroupForStudentDto> list =lecturer.getGroup();
+		if(list==null) {
+			list=new ArrayList<GroupForStudentDto>();
+		}
+		if(list.stream().anyMatch(g->g.getId().equals(group.getId()))) {
+			throw new GroupToLecturerExistsException(group.getName());
+		}
+		list.add(group);
+		lecturer.setGroup(list);
+		repo.save(lecturer);
+		return lecturer.build();
 	}
 
 	@Override
 	public LecturersDto removeGroupToLecturer(String id, GroupForStudentDto group) {
-		// TODO Auto-generated method stub
-		return null;
+		LecturersContact lecturer=getLecturer(id);	
+		List<GroupForStudentDto> list =lecturer.getGroup();
+		if(list==null) {
+			list=new ArrayList<GroupForStudentDto>();
+		}
+		if(!list.stream().anyMatch(g->g.getId().equals(group.getId()))) {
+			throw new GroupToLecturerNotExistsException(group.getName());
+		}
+		list.remove(group);
+		repo.save(lecturer);
+		return lecturer.build();
 	}
 
 	

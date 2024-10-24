@@ -18,9 +18,9 @@ public class LecturersDto extends UserContactDto{
 
 	private List<GroupForStudentDto> group;
 
-	public LecturersDto(String id, String name, String surName, String phone, String email, String city, Course course,
+	public LecturersDto( String name, String surName, String phone, String email, String city, Course course,
 			ArrayList<String> sourse, String comment, StatusContact statusContact, List<GroupForStudentDto> group) {
-		super(id, name, surName, phone, email, city, course, sourse, comment, statusContact);
+		super( name, surName, phone, email, city, course, sourse, comment, statusContact);
 		this.group = group;
 	}
 	

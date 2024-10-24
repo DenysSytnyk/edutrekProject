@@ -11,7 +11,7 @@ public interface ILecturersManagement {
 
 	LecturersDto createLecturer(LecturersRegisterDto lecturer);
 	LecturersDto removeLecturerById(String id);
-	LecturersDto updateLecturer(LecturersUpdateDto newLecturer);
+	LecturersDto updateLecturer(String id, LecturersUpdateDto newLecturer);
 	LecturersDto getLecturerById(String id);
 	LecturersDto addGroupToLecturer(String id,GroupForStudentDto group);
 	LecturersDto removeGroupToLecturer(String id,GroupForStudentDto group);

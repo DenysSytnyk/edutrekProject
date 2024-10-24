@@ -18,7 +18,7 @@ import telran.edutrek.utils.StatusContact;
 @Document(collection = "edutrek_lecturers")
 public class LecturersContact {
 
-	@Setter(value = AccessLevel.NONE)
+	
 	private String id;
 	private String name;
 	private String surName;
@@ -30,10 +30,11 @@ public class LecturersContact {
 	private String comment;
 	private StatusContact statusContact;
 	private List<GroupForStudentDto> group;
-	public LecturersContact(String id, String name, String surName, String phone, String email, String city,
+	public LecturersContact(String id ,String name, String surName, String phone, String email, String city,
 			Course course, ArrayList<String> sourse, String comment, StatusContact statusContact,
-			List<GroupForStudentDto> group) {
+			List<GroupForStudentDto> group ) {
 		super();
+		
 		this.id = id;
 		this.name = name;
 		this.surName = surName;
@@ -47,7 +48,7 @@ public class LecturersContact {
 		this.group = group;
 	}
 	public LecturersDto build() {
-		return new LecturersDto(id, name, surName, phone, email, city, course, sourse, comment, statusContact, group);
+		return new LecturersDto( name, surName, phone, email, city, course, sourse, comment, statusContact, group);
 		
 	}
 	

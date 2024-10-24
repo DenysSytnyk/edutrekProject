@@ -14,7 +14,7 @@ import telran.edutrek.utils.StatusContact;
 @Getter
 @AllArgsConstructor
 public class LecturersUpdateDto {
-	private String id;
+	
 	private String name;
 	private String surName;
 	private String phone;
