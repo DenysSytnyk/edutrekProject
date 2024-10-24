@@ -13,6 +13,7 @@ import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
 import telran.edutrek.contact.entities.UserContact;
+import telran.edutrek.contact.exceptions.UserContactExistsException;
 import telran.edutrek.contact.exceptions.UserContactNotFoundException;
 import telran.edutrek.contact.repo.ContactRepository;
 import telran.edutrek.student.dto.StudentDto;
@@ -30,11 +31,12 @@ public class ContactService implements IContactManagement{
 
 	@Override
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
-
+		if(repo.existsById(user.getPhone()))
+			throw new UserContactExistsException(user.getPhone());
 		UserContact us=new UserContact(user.getName(), user.getSurName(),
 				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
 		us = repo.save(us);
-		return new UserContactDto(us.getId(), user.getName(), user.getSurName(), 
+		return new UserContactDto( user.getName(), user.getSurName(), 
 				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
 				user.getComment(), user.getStatusContact());
 	}
@@ -102,13 +104,13 @@ public class ContactService implements IContactManagement{
 
 	@Override
 	public List<UserContactDto> getAllContact() {
+
 		List<UserContactDto> res=repo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
 		List<StudentDto> res1=studRepo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
 		List<UserContactDto> resultat = new ArrayList<UserContactDto>();
 		resultat.addAll(res);
 		resultat.addAll(res1);	
 		return resultat;
-
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import telran.edutrek.utils.StatusContact;
 @NoArgsConstructor
 @Builder
 public class UserContactDto {
-	private String id;
+	
 	private String name;
 	private String surName;
 	private String phone;
@@ -28,7 +28,7 @@ public class UserContactDto {
 
 
 	static UserContactDto build(UserContact user) {
-		return new UserContactDto(user.getId(), user.getName(), user.getSurName(), user.getPhone(),
+		return new UserContactDto( user.getName(), user.getSurName(), user.getPhone(),
 				user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
 	}
 }
