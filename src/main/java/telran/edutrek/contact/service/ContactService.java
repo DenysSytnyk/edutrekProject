@@ -1,6 +1,7 @@
 package telran.edutrek.contact.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,6 @@ import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
 import telran.edutrek.contact.entities.UserContact;
-import telran.edutrek.contact.exceptions.UserContactExistsException;
 import telran.edutrek.contact.exceptions.UserContactNotFoundException;
 import telran.edutrek.contact.repo.ContactRepository;
 import telran.edutrek.student.dto.StudentDto;
@@ -23,25 +23,20 @@ import telran.edutrek.student.repo.StudentRepository;
 public class ContactService implements IContactManagement{
 	
 	@Autowired
-	ContactRepository repoContact;
+	ContactRepository repo;
+	
 	@Autowired
-	StudentRepository repoStudent;
+	StudentRepository studRepo;
 
 	@Override
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
-		
-			if(repoContact.existsById(user.getId()))
-				
-				throw new UserContactExistsException(user.getId());
-				
-			UserContact us=new UserContact(user.getId(), user.getName(), user.getSurName(),
-					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
-			repoContact.save(us);
-			
-		
-		return new UserContactDto(user.getId(), user.getName(), user.getSurName(), 
-					user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
-					user.getComment(), user.getStatusContact());
+
+		UserContact us=new UserContact(user.getName(), user.getSurName(),
+				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
+		us = repo.save(us);
+		return new UserContactDto(us.getId(), user.getName(), user.getSurName(), 
+				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
+				user.getComment(), user.getStatusContact());
 	}
 
 	@Override
@@ -113,6 +108,7 @@ public class ContactService implements IContactManagement{
 		resultat.addAll(res);
 		resultat.addAll(res1);	
 		return resultat;
+
 	}
 
 	@Override

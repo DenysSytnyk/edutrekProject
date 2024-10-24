@@ -3,6 +3,7 @@ package telran.edutrek.group.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,22 @@ public class GroupController
 	@GetMapping("/group/{id}")
 	public GroupDto getGroupById(@PathVariable String id) {
 		return service.getGroupById(id);
+	}
+	
+	@GetMapping("/group/name/{name}")
+	public GroupDto getGroupByName(@PathVariable String name) {
+		return service.getGroupByName(name);
+	}
+	
+	@DeleteMapping("/group/{id}")
+	public GroupDto deleteGroupById(@PathVariable String id) {
+		return service.deleteGroup(id);
+	}
+	
+	@DeleteMapping("/group/student/{groupId}/{studentId}")
+	public boolean deleteStudentFromGroupById(@PathVariable String groupId,@PathVariable String studentId)
+	{
+		return service.removeStudentFromGroup(groupId, studentId);
 	}
 	
 	@GetMapping("/group")

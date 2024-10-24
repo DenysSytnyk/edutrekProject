@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.edutrek.reminder.dto.ReminderDto;
-import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.utils.GroupDays;
 
 @Getter
@@ -25,6 +24,6 @@ public class GroupUpdateDto
 	private GroupDays[] webinars;
 	private ReminderDto reminder;
 	private boolean deactivate;
-	private List<StudentDto> students;
+	private List<StudentForGroupDto> students;
 	
 }
