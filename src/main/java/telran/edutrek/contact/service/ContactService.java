@@ -42,14 +42,14 @@ public class ContactService implements IContactManagement{
 	@Override
 	public UserContactDto removeContactById(String id) {
 		UserContact user=getContactById(id);
-		repoContact.delete(user);
+		repo.delete(user);
 		return user.build();
 	}
 
 	@Override
 	public UserContact getContactById(String id) {
 		
-		return repoContact.findById(id).orElseThrow(()->
+		return repo.findById(id).orElseThrow(()->
 		new UserContactNotFoundException(id)
 				);
 	}
@@ -57,7 +57,7 @@ public class ContactService implements IContactManagement{
 	@Override
 	public UserContactDto updateContactById(ContactUpdateDto newContact) {
 		
-			if(!repoContact.existsById(newContact.getId()))
+			if(!repo.existsById(newContact.getId()))
 				throw new UserContactNotFoundException(newContact.getId());
 			UserContact user=getContactById(newContact.getId());
 			if(newContact.getName()==null) {
@@ -95,15 +95,15 @@ public class ContactService implements IContactManagement{
 			user.setSourse(newContact.getSourse());
 			user.setComment(newContact.getComment());
 			user.setStatusContact(newContact.getStatusContact());
-			repoContact.save(user);
+			repo.save(user);
 			return user.build();
 		
 	}
 
 	@Override
 	public List<UserContactDto> getAllContact() {
-		List<UserContactDto> res=repoContact.findAll().stream().map(u->u.build()).collect(Collectors.toList());
-		List<StudentDto> res1=repoStudent.findAll().stream().map(u->u.build()).collect(Collectors.toList());
+		List<UserContactDto> res=repo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
+		List<StudentDto> res1=studRepo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
 		List<UserContactDto> resultat = new ArrayList<UserContactDto>();
 		resultat.addAll(res);
 		resultat.addAll(res1);	
