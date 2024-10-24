@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
@@ -18,6 +19,7 @@ import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.repo.StudentRepository;
 
 @Service
+@Slf4j
 public class ContactService implements IContactManagement{
 	
 	@Autowired
@@ -40,77 +42,73 @@ public class ContactService implements IContactManagement{
 	@Override
 	public UserContactDto removeContactById(String id) {
 		UserContact user=getContactById(id);
-		repo.delete(user);
+		repoContact.delete(user);
 		return user.build();
 	}
 
 	@Override
 	public UserContact getContactById(String id) {
 		
-		return repo.findById(id).orElseThrow(()->
+		return repoContact.findById(id).orElseThrow(()->
 		new UserContactNotFoundException(id)
 				);
 	}
 
 	@Override
 	public UserContactDto updateContactById(ContactUpdateDto newContact) {
-		if(!repo.existsById(newContact.getId()))
-			throw new UserContactNotFoundException(newContact.getId());
-		UserContact user=getContactById(newContact.getId());
-		if(newContact.getName()==null) {
-			user.setName(user.getName());
-		}
-		if(newContact.getSurName()==null) {
-			user.setSurName(user.getSurName());
-		}
-		if(newContact.getPhone()==null) {
-			user.setPhone(user.getPhone());
-		}
-		if(newContact.getEmail()==null) {
-			user.setEmail(user.getEmail());
-		}
-		if(newContact.getCity()==null) {
-			user.setCity(user.getCity());
-		}
-		if(newContact.getCourse()==null) {
-			user.setCourse(user.getCourse());
-		}
-		if(newContact.getSourse()==null) {
-			user.setSourse(user.getSourse());
-		}
-		if(newContact.getComment()==null) {
-			user.setComment(user.getComment());
-		}
-		if(newContact.getStatusContact()==null) {
-			user.setStatusContact(user.getStatusContact());
-		}
-		user.setName(newContact.getName());
-		user.setPhone(newContact.getPhone());
-		user.setEmail(newContact.getEmail());
-		user.setCity(newContact.getCity());
-		user.setCourse(newContact.getCourse());
-		user.setSourse(newContact.getSourse());
-		user.setComment(newContact.getComment());
-		user.setStatusContact(newContact.getStatusContact());
-		repo.save(user);
-		return user.build();
+		
+			if(!repoContact.existsById(newContact.getId()))
+				throw new UserContactNotFoundException(newContact.getId());
+			UserContact user=getContactById(newContact.getId());
+			if(newContact.getName()==null) {
+				user.setName(user.getName());
+			}
+			if(newContact.getSurName()==null) {
+				user.setSurName(user.getSurName());
+			}
+			if(newContact.getPhone()==null) {
+				user.setPhone(user.getPhone());
+			}
+			if(newContact.getEmail()==null) {
+				user.setEmail(user.getEmail());
+			}
+			if(newContact.getCity()==null) {
+				user.setCity(user.getCity());
+			}
+			if(newContact.getCourse()==null) {
+				user.setCourse(user.getCourse());
+			}
+			if(newContact.getSourse()==null) {
+				user.setSourse(user.getSourse());
+			}
+			if(newContact.getComment()==null) {
+				user.setComment(user.getComment());
+			}
+			if(newContact.getStatusContact()==null) {
+				user.setStatusContact(user.getStatusContact());
+			}
+			user.setName(newContact.getName());
+			user.setPhone(newContact.getPhone());
+			user.setEmail(newContact.getEmail());
+			user.setCity(newContact.getCity());
+			user.setCourse(newContact.getCourse());
+			user.setSourse(newContact.getSourse());
+			user.setComment(newContact.getComment());
+			user.setStatusContact(newContact.getStatusContact());
+			repoContact.save(user);
+			return user.build();
+		
 	}
 
 	@Override
 	public List<UserContactDto> getAllContact() {
-		try {
-			List<UserContactDto> res = new ArrayList<>();
-			Collection<UserContactDto> resCont=repo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
-			Collection<StudentDto> resStud=studRepo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
-			
-			res.addAll(resStud);
-			res.addAll(resCont);
-			return res;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
-		}
-		
+		List<UserContactDto> res=repoContact.findAll().stream().map(u->u.build()).collect(Collectors.toList());
+		List<StudentDto> res1=repoStudent.findAll().stream().map(u->u.build()).collect(Collectors.toList());
+		List<UserContactDto> resultat = new ArrayList<UserContactDto>();
+		resultat.addAll(res);
+		resultat.addAll(res1);	
+		return resultat;
+
 	}
 
 	@Override

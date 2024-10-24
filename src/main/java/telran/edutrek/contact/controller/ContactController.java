@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
@@ -26,7 +27,7 @@ public class ContactController {
 	IContactManagement server;
 
 	@PostMapping("/add")
-	public UserContactDto addNewContact(@RequestBody UserContactRegisterDto user) {
+	public UserContactDto addNewContact(@RequestBody @Valid UserContactRegisterDto user) {
 		return server.addNewContact(user);
 	}
 
@@ -54,13 +55,13 @@ public class ContactController {
 		return server.getAllContact();
 	}
 
-	@GetMapping("/all/{name}")
+	@GetMapping("/all/name/{name}")
 	public List<UserContactDto> getContactByName(@PathVariable String name) {
 		
 		return server.getContactBySurName(name);
 	}
 
-	@GetMapping("/all/{sur_name}")
+	@GetMapping("/all/surName/{surName}")
 	public List<UserContactDto> getContactBySurName(@PathVariable String surName) {
 		
 		return server.getContactBySurName(surName);

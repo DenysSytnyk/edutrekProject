@@ -23,23 +23,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AccountingExceptionsController 
 {
-
-	@ExceptionHandler(UsernameNotFoundException.class)
-	ResponseEntity<String> handlerUserNameNotFoundException(UsernameNotFoundException e)
-	{
-		log.error(e.getMessage());
-		String message = USER_NOT_FOUND + e.getMessage();
-		return new ResponseEntity<String>(message, HttpStatus.NOT_FOUND);
-	}
-	
-	@ExceptionHandler(UserIsBlockedException.class)
-	ResponseEntity<String> handlerUserBlockedException(UserIsBlockedException e)
-	{
-		log.error(e.getMessage());
-		String message = USER_IS_BLOCKED + e.getMessage();
-		return new ResponseEntity<String>(message, HttpStatus.CONFLICT);
-	}
-	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	ResponseEntity<String> methodArgumentNotValidException(MethodArgumentNotValidException e)
 	{
@@ -78,18 +61,17 @@ public class AccountingExceptionsController
 	ResponseEntity<String> handlerUserExistException(UserExistsException e)
 	{
 		log.error(e.getMessage());
-		String message = USER_EXIST + e.getMessage();
-		return new ResponseEntity<String>(message, HttpStatus.BAD_REQUEST);
+		String message = USER_IS_BLOCKED + e.getMessage();
+		return new ResponseEntity<String>(message, HttpStatus.CONFLICT);
 	}
-
+	
 	@ExceptionHandler(UserNotFoundException.class)
 	ResponseEntity<String> handlerUserNotFoundException(UserNotFoundException e)
 	{
 		log.error(e.getMessage());
 		String message = USER_NOT_FOUND + e.getMessage();
 		return new ResponseEntity<String>(message, HttpStatus.NOT_FOUND);
-	}
-	
-	
+	}	
 
 }
+
