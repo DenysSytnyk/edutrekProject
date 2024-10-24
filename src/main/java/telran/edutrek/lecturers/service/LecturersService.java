@@ -29,7 +29,7 @@ public class LecturersService implements ILecturersManagement{
 		if(repo.existsById(lecturer.getPhone())) {
 			throw new LecturerExistsException(lecturer.getPhone());
 		}
-		LecturersContact lecturerContact=new LecturersContact(lecturer.getId(), lecturer.getName(), lecturer.getSurName(), lecturer.getPhone(),
+		LecturersContact lecturerContact=new LecturersContact(lecturer.getName(), lecturer.getSurName(), lecturer.getPhone(),
 				lecturer.getEmail(), lecturer.getCity(), null, lecturer.getSourse(), lecturer.getComment(),lecturer.getStatusContact(), lecturer.getGroup());
 		repo.save(lecturerContact);
 		return lecturerContact.build();

@@ -16,10 +16,10 @@ public class StudentRegisterDto extends UserContactRegisterDto
 	private List<GroupForStudentDto> group;
 	private int cost_course;
 	private Integer[] status_payment;
-	public StudentRegisterDto(String id,String name, String surName, String phone, String email, String city,
+	public StudentRegisterDto(String name, String surName, String phone, String email, String city,
 			Course course, ArrayList<String> sourse, String comment, StatusContact statusContact, List<GroupForStudentDto> group, int cost_course) 
       {
-		super(id,name, surName, phone, email, city,  course, sourse, comment, statusContact);
+		super(name, surName, phone, email, city,  course, sourse, comment, statusContact);
 		this.group = group;
 		this.cost_course = cost_course;
 		this.status_payment = new Integer[] {0, cost_course};
