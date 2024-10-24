@@ -29,6 +29,5 @@ public class ContactExceptionsController
 		String message = USER_NOT_FOUND + e.getMessage();
 		return new ResponseEntity<String>(message, HttpStatus.NOT_FOUND);
 	}
-	
-	
 }
+
