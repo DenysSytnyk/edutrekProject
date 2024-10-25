@@ -17,7 +17,7 @@ import telran.edutrek.utils.StatusContact;
 public class UserContact {
 
 
-	
+	private String id;
 	private String name;
 	private String surName;
 	private String phone;

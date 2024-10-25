@@ -30,7 +30,7 @@ public class StudentDto extends UserContactDto
 	public StudentDto(String id, String name, String surName, String phone, String email, String city, Course course,
 			ArrayList<String> sourse, String comment, StatusContact statusContact, List<GroupForStudentDto> group, int cost_course,
 			List<PaymentDto> payments, LinkedList<String> logs, Integer[] status_payment, ReminderDto reminder) {
-		super( name, surName, phone, email, city, course, sourse, comment, statusContact);
+		super(id, name, surName, phone, email, city, course, sourse, comment, statusContact);
 		this.group = group;
 		this.cost_course = cost_course;
 		this.payments = payments;
