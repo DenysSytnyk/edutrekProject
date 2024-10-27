@@ -1,6 +1,7 @@
 package telran.edutrek.lecturers.entities;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,9 +31,11 @@ public class LecturersContact {
 	private String comment;
 	private StatusContact statusContact;
 	private List<GroupForStudentDto> group;
+	private LinkedList<String> logs;
+	
 	public LecturersContact(String name, String surName, String phone, String email, String city,
 			Course course, ArrayList<String> sourse, String comment, StatusContact statusContact,
-			List<GroupForStudentDto> group ) {
+			List<GroupForStudentDto> group, LinkedList<String> logs ) {
 		super();
 		
 		
@@ -46,9 +49,10 @@ public class LecturersContact {
 		this.comment = comment;
 		this.statusContact = statusContact;
 		this.group = group;
+		this.logs = logs;
 	}
 	public LecturersDto build() {
-		return new LecturersDto(id, name, surName, phone, email, city, course, sourse, comment, statusContact, group);
+		return new LecturersDto(id, name, surName, phone, email, city, course, sourse, comment, statusContact, group, logs);
 		
 	}
 	

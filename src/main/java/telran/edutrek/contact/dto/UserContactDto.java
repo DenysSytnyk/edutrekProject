@@ -1,6 +1,7 @@
 package telran.edutrek.contact.dto;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +27,12 @@ public class UserContactDto {
 	private ArrayList<String> sourse;
 	private String comment;
 	private StatusContact statusContact;
+	private LinkedList<String> logs;
 
 
 	static UserContactDto build(UserContact user) {
 		return new UserContactDto(user.getId() ,user.getName(), user.getSurName(), user.getPhone(),
-				user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), user.getComment(), user.getStatusContact());
+				user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), 
+				user.getComment(), user.getStatusContact(), user.getLogs() );
 	}
 }

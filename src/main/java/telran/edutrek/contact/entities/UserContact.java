@@ -1,6 +1,7 @@
 package telran.edutrek.contact.entities;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -27,8 +28,9 @@ public class UserContact {
 	private ArrayList<String> sourse;
 	private String comment;
 	private StatusContact statusContact;
+	private LinkedList<String> logs;
 	public UserContact(String name, String surName, String phone, String email, String city, Course course,
-			ArrayList<String> sourse, String comment, StatusContact statusContact) {
+			ArrayList<String> sourse, String comment, StatusContact statusContact, LinkedList<String> logs) {
 		super();
 		this.name = name;
 		this.surName = surName;
@@ -39,6 +41,7 @@ public class UserContact {
 		this.sourse = new ArrayList<String>();
 		this.comment = comment;
 		this.statusContact = statusContact;
+		this.logs = logs;
 	}
 	
 	public UserContactDto build() {
