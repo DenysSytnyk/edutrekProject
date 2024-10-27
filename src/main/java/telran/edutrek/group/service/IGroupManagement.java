@@ -5,6 +5,7 @@ import java.util.List;
 import telran.edutrek.group.dto.GroupDto;
 import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
+import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.student.dto.StudentDto;
 
 public interface IGroupManagement 
@@ -20,4 +21,5 @@ public interface IGroupManagement
 	boolean removeStudentFromGroup(String groupId, String studentId);
 	StudentDto archiveStudentFromGroup(String groupId, String studentId);
 	boolean deactivateGroupById(String id);
+	boolean addReminderGroupById(String groupId, String reminder);
 }

@@ -1,5 +1,6 @@
 package telran.edutrek.reminder.exceptions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ public class ReminderDateNotValidException extends RuntimeException
 
 		private static final long serialVersionUID = -3527730242182555353L;
 
-		public ReminderDateNotValidException(LocalDateTime date) 
+		public ReminderDateNotValidException(LocalDate date) 
 		{
 			super("Date "+ date.toString() + " is not valid");
 		}

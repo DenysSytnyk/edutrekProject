@@ -22,6 +22,8 @@ import telran.edutrek.group.exceptions.GroupNotFoundExceptions;
 import telran.edutrek.group.exceptions.StudentExistsInGroupExceptions;
 import telran.edutrek.group.exceptions.StudentNotInGroupException;
 import telran.edutrek.group.repo.GroupRepository;
+import telran.edutrek.reminder.dto.ReminderDto;
+import telran.edutrek.reminder.exceptions.ReminderCommentNotValidException;
 import telran.edutrek.student.dto.GroupForStudentDto;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.entities.StudentContact;
@@ -240,6 +242,31 @@ public class GroupService implements IGroupManagement
 	{
 		return repo.findByName(name).orElseThrow(() -> 
 		new GroupNotFoundExceptions(name));
+	}
+
+	@Override
+	public boolean addReminderGroupById(String groupId, String reminder) 
+	{
+		if (reminder == null)
+			throw new ReminderCommentNotValidException();
+		
+		GroupData group = getGroup(groupId);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
+		
+		ReminderDto rem = new ReminderDto(LocalDate.now(), reminder);
+		group.setReminder(rem);
+		
+		String logForStudent = LocalDate.now().toString() + " " +  group.getName() + " - " + reminder;
+		group.getStudents().forEach((s) ->
+		{
+			StudentContact student = getStudent(s.getId());
+			student.getLogs().add(logForStudent);
+			studRepo.save(student);
+		});
+		
+		repo.save(group);
+		return true;
 	}
 
 }

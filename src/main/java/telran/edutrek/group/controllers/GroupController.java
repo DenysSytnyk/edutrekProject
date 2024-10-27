@@ -15,6 +15,7 @@ import telran.edutrek.group.dto.GroupDto;
 import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.group.service.IGroupManagement;
+import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.student.dto.StudentDto;
 
 @RestController
@@ -78,6 +79,12 @@ public class GroupController
 	public StudentDto archiveStudentFromGroup(@PathVariable String groupId,@PathVariable String studentId) 
 	{
 		return service.archiveStudentFromGroup(groupId, studentId);
+	}
+	
+	@PutMapping("/group/reminder/{groupId}")
+	public boolean addReminderToGroup(@PathVariable String groupId, @RequestBody String reminder) 
+	{
+		return service.addReminderGroupById(groupId, reminder);
 	}
 
 

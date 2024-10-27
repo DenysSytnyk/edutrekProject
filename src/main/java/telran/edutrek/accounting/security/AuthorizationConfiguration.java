@@ -27,7 +27,8 @@ public class AuthorizationConfiguration {
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*",
 						"/group/update/*", "/group/add/*/*", "/group/move/*/*", "/group/archive/*/*", "/students/comment/*",
 						"/students/payments/*", "/contact/update",
-						"/students/reminder/*", "/students/update/*", "/lecturer/update/*","/lecturer/add/group/*").authenticated()
+						"/students/reminder/*", "/students/update/*", "/lecturer/update/*",
+						"/lecturer/add/group/*", "/group/reminder/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/students/*", "/contact/*", "/group/*", "/group/student/*/*","/lecturer/*","/lecturer/remove/group/*").authenticated()
 				.requestMatchers(HttpMethod.DELETE, "/auth/{login}")
 				.access(new WebExpressionAuthorizationManager("#login == authentication.name or hasRole('ADMIN')"))

@@ -1,7 +1,9 @@
 package telran.edutrek.student.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,13 +38,16 @@ public class StudentService implements IStudentManagement {
 		StudentContact stud = new StudentContact(student.getName(), student.getSurName(),
 				student.getPhone(), student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(),
 				student.getComment(), student.getStatusContact(), student.getGroup(), student.getCost_course(), null,
-				null, student.getStatus_payment(), null);
+				new LinkedList<String>(), student.getStatus_payment(), null);
+		
+		String createLog = LocalDate.now().toString() + " - Student created";
+		stud.getLogs().add(createLog);
 
 		StudentContact s = repo.save(stud);
 
 		return new StudentDto(s.getId(), student.getName(), student.getSurName(), student.getPhone(),
 				student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(), student.getComment(),
-				student.getStatusContact(), student.getGroup(), student.getCost_course(), null, null,
+				student.getStatusContact(), student.getGroup(), student.getCost_course(), null, s.getLogs(),
 				student.getStatus_payment(), null);
 	}
 
@@ -168,7 +173,7 @@ public class StudentService implements IStudentManagement {
 			throw new StudentNotFoundException(id);
 		}
 		StudentContact stud = getStudentContact(id);
-		if (reminder.getDate().isBefore(LocalDateTime.now())) {
+		if (reminder.getDate().isBefore(LocalDate.now())) {
 			throw new ReminderDateNotValidException(reminder.getDate());
 		}
 		stud.setReminder(reminder);
