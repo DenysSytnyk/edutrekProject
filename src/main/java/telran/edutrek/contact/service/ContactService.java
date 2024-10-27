@@ -1,5 +1,6 @@
 package telran.edutrek.contact.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -34,13 +35,14 @@ public class ContactService implements IContactManagement{
 	public UserContactDto addNewContact(UserContactRegisterDto user) {
 		if(repo.existsById(user.getPhone()))
 			throw new UserContactExistsException(user.getPhone());
-		UserContact us= new UserContact(user.getName(), user.getSurName(),
-				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(),
-				user.getSourse(), user.getComment(), user.getStatusContact(), new LinkedList<String>());
+		
+		UserContact us= UserContactDto.toUserContact(user);
+		
+		String createLog = LocalDate.now().toString() + " - Contact created";
+		us.getLogs().add(createLog);
 		us = repo.save(us);
-		return new UserContactDto(us.getId(), user.getName(), user.getSurName(), 
-				user.getPhone(), user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(),
-				user.getComment(), user.getStatusContact(), us.getLogs());
+		
+		return UserContactDto.build(us);
 	}
 
 	@Override
