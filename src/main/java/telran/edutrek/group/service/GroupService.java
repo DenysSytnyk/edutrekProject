@@ -16,6 +16,7 @@ import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.group.dto.StudentForGroupDto;
 import telran.edutrek.group.entities.GroupData;
+import telran.edutrek.group.exceptions.GroupDeactivatedException;
 import telran.edutrek.group.exceptions.GroupExistsExceptions;
 import telran.edutrek.group.exceptions.GroupNotFoundExceptions;
 import telran.edutrek.group.exceptions.StudentExistsInGroupExceptions;
@@ -71,7 +72,11 @@ public class GroupService implements IGroupManagement
 	@Override
 	public GroupDto updateGroupById(String id, GroupUpdateDto newGroupData) 
 	{
+	
 		GroupData data = getGroup(id);
+		if (data.isDeactivate())
+			throw new GroupDeactivatedException(data.getName());
+		
 		data.setName(newGroupData.getName());
 		data.setWhatsapp(newGroupData.getWhatsapp());
 		data.setSkype(newGroupData.getSkype());
@@ -106,6 +111,9 @@ public class GroupService implements IGroupManagement
 		GroupData data = getGroup(groupId);
 		StudentContact student = getStudent(studentId);
 		
+		if (data.isDeactivate())
+			throw new GroupDeactivatedException(data.getName());
+		
 		List<StudentForGroupDto> list = data.getStudents();
 		if (list == null)
 			list = new ArrayList<StudentForGroupDto>();
@@ -133,6 +141,9 @@ public class GroupService implements IGroupManagement
 	{
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
+		
 		List<StudentForGroupDto> list = group.getStudents();
 		
 		if (list.stream().anyMatch(s -> s.getId().equals(studentId))) 
@@ -151,6 +162,8 @@ public class GroupService implements IGroupManagement
 	{
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
 		
 		if (!student.getGroup().stream().anyMatch((g) -> g.getId().equals(group.getId()))) 
 			throw new StudentNotInGroupException(groupId, student.getSurName());
@@ -169,6 +182,8 @@ public class GroupService implements IGroupManagement
 	public boolean deactivateGroupById(String id) 
 	{
 		GroupData group = getGroup(id);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
 		
 		if (ChronoUnit.DAYS.between(group.getEndDate(), LocalDate.now()) > 30) 
 		{
@@ -206,6 +221,7 @@ public class GroupService implements IGroupManagement
 	{
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
+		
 		
 		if (!student.getGroup().stream().anyMatch((g) -> g.getId().equals(group.getId()))) 
 			throw new StudentNotInGroupException(groupId, student.getSurName());
