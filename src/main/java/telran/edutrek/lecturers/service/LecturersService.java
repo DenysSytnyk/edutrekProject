@@ -1,6 +1,7 @@
 package telran.edutrek.lecturers.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,8 @@ public class LecturersService implements ILecturersManagement{
 			throw new LecturerExistsException(lecturer.getPhone());
 		}
 		LecturersContact lecturerContact=new LecturersContact(lecturer.getName(), lecturer.getSurName(), lecturer.getPhone(),
-				lecturer.getEmail(), lecturer.getCity(), null, lecturer.getSourse(), lecturer.getComment(),lecturer.getStatusContact(), lecturer.getGroup());
+				lecturer.getEmail(), lecturer.getCity(), null, lecturer.getSourse(), lecturer.getComment(),
+				lecturer.getStatusContact(), lecturer.getGroup(), new LinkedList<String>());
 		repo.save(lecturerContact);
 		return lecturerContact.build();
 	}
@@ -89,8 +91,6 @@ public class LecturersService implements ILecturersManagement{
 		
 	}
 
-	
-
 	@Override
 	public List<LecturersDto> getAllLecturer() {
 		List<LecturersDto> lecturer=repo.findAll().stream().map(m->m.build()).collect(Collectors.toList());
@@ -133,7 +133,5 @@ public class LecturersService implements ILecturersManagement{
 		repo.save(lecturer);
 		return lecturer.build();
 	}
-
-	
 
 }
