@@ -42,7 +42,8 @@ public class GroupService implements IGroupManagement
 	@Override
 	public GroupDto createGroup(GroupRegisterDto group) 
 	{
-		if (repo.existsById(group.getName())) 
+		GroupData g = repo.findByName(group.getName()).orElse(null);
+		if (g != null && !g.isDeactivate()) 
 			throw new GroupExistsExceptions(group.getName());
 		
 		GroupData data = GroupRegisterDto.build(group);
@@ -187,11 +188,9 @@ public class GroupService implements IGroupManagement
 		if (group.isDeactivate())
 			throw new GroupDeactivatedException(group.getName());
 		
-		if (ChronoUnit.DAYS.between(group.getEndDate(), LocalDate.now()) > 30) 
-		{
+
 			group.setStatus(true);
 			repo.save(group);
-		}
 			
 		return true;
 	}
@@ -241,7 +240,7 @@ public class GroupService implements IGroupManagement
 	public GroupDto getGroupByName(String name) 
 	{
 		return repo.findByName(name).orElseThrow(() -> 
-		new GroupNotFoundExceptions(name));
+		new GroupNotFoundExceptions(name)).build();
 	}
 
 	@Override

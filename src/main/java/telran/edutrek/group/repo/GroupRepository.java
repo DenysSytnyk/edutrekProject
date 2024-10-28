@@ -10,6 +10,6 @@ import telran.edutrek.group.entities.GroupData;
 public interface GroupRepository extends MongoRepository<GroupData, String>
 {
 
-	Optional<GroupDto> findByName(String name);
+	Optional<GroupData> findByName(String name);
 	
 }
