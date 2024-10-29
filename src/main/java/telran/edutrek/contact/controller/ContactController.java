@@ -65,5 +65,11 @@ public class ContactController {
 		
 		return server.getContactBySurName(surName);
 	}
+	
+	@PutMapping("/comment/{id}")
+	public boolean addCommentById(@PathVariable String id, @RequestBody String comment)
+	{
+		return server.addCommentById(id, comment);
+	}
 
 }

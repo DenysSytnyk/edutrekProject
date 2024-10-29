@@ -129,5 +129,20 @@ public class ContactService implements IContactManagement{
 		
 	}
 
+	@Override
+	public boolean addCommentById(String id, String comment) 
+	{
+		if (comment==null)
+			return false;
+		
+		UserContact user=getContactById(id);
+		user.setComment(comment);
+		
+		String createLog = LocalDate.now().toString() + comment;
+		user.getLogs().add(createLog);
+		repo.save(user);
+		return true;
+	}
+
 	
 }
