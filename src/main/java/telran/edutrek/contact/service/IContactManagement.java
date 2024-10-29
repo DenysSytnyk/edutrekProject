@@ -14,6 +14,7 @@ public interface IContactManagement {
 	UserContact getContactById(String id);
 	UserContactDto updateContactById(ContactUpdateDto newContact);
 	List<UserContactDto> getAllContact();
+	List<UserContactDto> getAllActiveContact();
 	List<UserContactDto> getContactByName(String name);
 	List<UserContactDto> getContactBySurName(String surName);
 	boolean addCommentById(String id, String comment);

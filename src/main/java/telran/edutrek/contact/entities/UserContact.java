@@ -45,8 +45,8 @@ public class UserContact {
 	}
 	
 	public UserContactDto build() {
-		return UserContactDto.builder().name(name).surName(surName)
-				.phone(phone).email(email).city(city).course(course).course(course)
-				.sourse(sourse).comment(comment).statusContact(statusContact).build();
+		return UserContactDto.builder().id(id).name(name).surName(surName)
+				.phone(phone).email(email).city(city).course(course)
+				.sourse(sourse).comment(comment).statusContact(statusContact).logs(logs).build();
 	}
 }

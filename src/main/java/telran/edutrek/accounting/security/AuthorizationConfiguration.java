@@ -23,7 +23,8 @@ public class AuthorizationConfiguration {
 				.requestMatchers(HttpMethod.POST, "/auth", "/students/add", "/group/create", "/contact/add","/lecturer/add").authenticated()
 				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*",
 						"/students/id/*", "/group/*", "/group", "/students/name/*", "/students", "/contact/all",
-						"/contact/id/*", "/contact/all/*", "/group/name/*","/lecturer/all","/lecturer/name/*","/lecturer/id/*").authenticated()
+						"/contact/id/*", "/contact/all/*", "/group/name/*","/lecturer/all","/lecturer/name/*",
+						"/lecturer/id/*", "/contact/all/active").authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*",
 						"/group/update/*", "/group/add/*/*", "/group/move/*/*", "/group/archive/*/*", "/students/comment/*",
 						"/students/payments/*", "/contact/update", "/contact/comment/*",

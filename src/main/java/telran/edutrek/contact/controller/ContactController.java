@@ -53,6 +53,12 @@ public class ContactController {
 		
 		return server.getAllContact();
 	}
+	
+	@GetMapping("/all/active")
+	public List<UserContactDto> getAllActiveContact() {
+		
+		return server.getAllActiveContact();
+	}
 
 	@GetMapping("/all/name/{name}")
 	public List<UserContactDto> getContactByName(@PathVariable String name) {

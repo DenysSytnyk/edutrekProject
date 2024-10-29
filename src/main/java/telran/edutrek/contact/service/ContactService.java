@@ -20,6 +20,7 @@ import telran.edutrek.contact.exceptions.UserContactNotFoundException;
 import telran.edutrek.contact.repo.ContactRepository;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.repo.StudentRepository;
+import telran.edutrek.utils.StatusContact;
 
 @Service
 @Slf4j
@@ -42,7 +43,7 @@ public class ContactService implements IContactManagement{
 		us.getLogs().add(createLog);
 		us = repo.save(us);
 		
-		return UserContactDto.build(us);
+		return us.build();
 	}
 
 	@Override
@@ -142,6 +143,19 @@ public class ContactService implements IContactManagement{
 		user.getLogs().add(createLog);
 		repo.save(user);
 		return true;
+	}
+
+	@Override
+	public List<UserContactDto> getAllActiveContact() 
+	{
+		List<UserContactDto> res=repo.findAll().stream()
+				.filter((u) ->
+				u.getStatusContact().equals(StatusContact.IN_WORK) || 
+				u.getStatusContact().equals(StatusContact.SAVE_FOR_LATER) || 
+				u.getStatusContact().equals(StatusContact.CONSULTATION) ||
+				u.getStatusContact().equals(StatusContact.LEAD))
+				.map(u->u.build()).collect(Collectors.toList());
+		return res;
 	}
 
 	

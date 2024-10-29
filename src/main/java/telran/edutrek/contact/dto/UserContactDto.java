@@ -33,7 +33,7 @@ public class UserContactDto {
 	static public UserContactDto build(UserContact user) {
 		return new UserContactDto(user.getId() ,user.getName(), user.getSurName(), user.getPhone(),
 				user.getEmail(), user.getCity(), user.getCourse(), user.getSourse(), 
-				user.getComment(), user.getStatusContact(), user.getLogs() );
+				user.getComment(), user.getStatusContact(), user.getLogs());
 	}
 	
 	static public UserContact toUserContact(UserContactRegisterDto user)
