@@ -15,47 +15,46 @@ import telran.edutrek.group.repo.GroupRepository;
 import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.reminder.exceptions.ReminderDateNotValidException;
 import telran.edutrek.student.dto.PaymentDto;
+import telran.edutrek.student.dto.PaymentUpdateDto;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.dto.StudentRegisterDto;
 import telran.edutrek.student.dto.StudentUpdateDto;
 import telran.edutrek.student.entities.StudentContact;
+import telran.edutrek.student.exceptions.StudentAlreadyExistsException;
 import telran.edutrek.student.exceptions.StudentNotFoundException;
 import telran.edutrek.student.repo.StudentRepository;
-
 
 @Service
 public class StudentService implements IStudentManagement {
 
 	@Autowired
 	StudentRepository repo;
-	
+
 	@Autowired
 	GroupRepository groupRepo;
 
 	@Override
 	public StudentDto createStudent(StudentRegisterDto student) {
-	
-		StudentContact stud = new StudentContact(student.getName(), student.getSurName(),
-				student.getPhone(), student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(),
-				student.getComment(), student.getStatusContact(), student.getGroup(), student.getCost_course(), null,
-				new LinkedList<String>(), student.getStatus_payment(), null);
-		
-		String createLog = LocalDate.now().toString() + " - Student created";
-		stud.getLogs().add(createLog);
-
-		StudentContact s = repo.save(stud);
-
-		return new StudentDto(s.getId(), student.getName(), student.getSurName(), student.getPhone(),
+		if (repo.existsById(student.getPhone())) {
+			throw new StudentAlreadyExistsException(student.getPhone());
+		}
+		StudentContact stud = new StudentContact(student.getName(), student.getSurName(), student.getPhone(),
 				student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(), student.getComment(),
 				student.getStatusContact(), student.getGroup(), student.getCost_course(), null, s.getLogs(),
 				student.getStatus_payment(), null);
+		String createLog = LocalDate.now().toString() + " - student created";
+		LinkedList<String> logsNew = new LinkedList<String>();
+		stud.setLogs(logsNew);
+		stud.getLogs().add(createLog);
+		StudentContact s = repo.save(stud);
+
+		return s.build();
 	}
 
 	@Override
 	public StudentDto removeStudentsById(String id) {
 		StudentContact student = getStudentContact(id);
-		student.getGroup().forEach(g -> 
-		{
+		student.getGroup().forEach(g -> {
 			GroupData group = groupRepo.findById(g.getId()).orElse(null);
 			group.getStudents().removeIf((s) -> s.getId().equals(id));
 			groupRepo.save(group);
@@ -95,40 +94,50 @@ public class StudentService implements IStudentManagement {
 
 		if (newStudentData.getName() == null) {
 			stud.setName(stud.getName());
+		} else {
+			stud.setName(newStudentData.getName());
 		}
 
 		if (newStudentData.getSurName() == null) {
 			stud.setSurName(stud.getSurName());
+		} else {
+			stud.setSurName(newStudentData.getSurName());
 		}
 
 		if (newStudentData.getPhone() == null) {
 			stud.setPhone(stud.getPhone());
+		} else {
+			stud.setPhone(newStudentData.getPhone());
 		}
 
 		if (newStudentData.getCity() == null) {
 			stud.setCity(stud.getCity());
+		} else {
+			stud.setCity(newStudentData.getCity());
 		}
 
 		if (newStudentData.getEmail() == null) {
 			stud.setEmail(stud.getEmail());
+		} else {
+			stud.setEmail(newStudentData.getEmail());
 		}
 
 		if (newStudentData.getCourse() == null) {
 			stud.setCourse(stud.getCourse());
+		} else {
+			stud.setCourse(newStudentData.getCourse());
 		}
 
 		if (newStudentData.getStatusContact() == null) {
 			stud.setStatusContact(stud.getStatusContact());
+		} else {
+			stud.setStatusContact(newStudentData.getStatusContact());
 		}
 
-		stud.setName(newStudentData.getName());
-		stud.setSurName(newStudentData.getSurName());
-		stud.setPhone(newStudentData.getPhone());
-		stud.setEmail(newStudentData.getEmail());
-		stud.setCourse(newStudentData.getCourse());
-		stud.setStatusContact(newStudentData.getStatusContact());
 		stud.setCost_course(newStudentData.getCost_course());
-
+		
+		String createLog = LocalDate.now().toString() + " - student information has been updated";
+		stud.getLogs().add(createLog);
 		repo.save(stud);
 
 		return stud.build();
@@ -143,6 +152,8 @@ public class StudentService implements IStudentManagement {
 
 		if (comment != null && !comment.trim().isEmpty()) {
 			stud.setComment(comment);
+			String createLog = LocalDate.now().toString() + " - comment has been added";
+			stud.getLogs().add(createLog);
 			repo.save(stud);
 
 		}
@@ -159,10 +170,14 @@ public class StudentService implements IStudentManagement {
 			List<PaymentDto> payments = new ArrayList<PaymentDto>();
 			payments.add(payment);
 			stud.setPayments(payments);
+			String createLog = LocalDate.now().toString() + " - payment has been added";
+			stud.getLogs().add(createLog);
 			repo.save(stud);
 			return true;
 		}
 		stud.getPayments().add(payment);
+		String createLog = LocalDate.now().toString() + " - payment has been added";
+		stud.getLogs().add(createLog);
 		repo.save(stud);
 		return true;
 	}
@@ -176,9 +191,48 @@ public class StudentService implements IStudentManagement {
 		if (reminder.getDate().isBefore(LocalDate.now())) {
 			throw new ReminderDateNotValidException(reminder.getDate());
 		}
+		String createLog = LocalDate.now().toString() + " - reminder has been added";
+		stud.getLogs().add(createLog);
 		stud.setReminder(reminder);
 		repo.save(stud);
 		return true;
+	}
+
+	@Override
+	public List<PaymentDto> updatePayment(String id, LocalDateTime date, PaymentUpdateDto payment) {
+		if (!repo.existsById(id)) {
+			throw new StudentNotFoundException(id);
+		}
+		StudentContact stud = getStudentContact(id);
+		List<PaymentDto> newPayments = stud.getPayments().stream().filter(paym -> !paym.getDate().isEqual(date))
+				.collect(Collectors.toList());
+		PaymentDto updatedPayment = new PaymentDto(date, payment.getType(), payment.getAmount(),
+				payment.getInstallments(), payment.getDetails());
+		newPayments.add(updatedPayment);
+		stud.setPayments(newPayments);
+		String createLog = LocalDate.now().toString() + " - payment has been updated";
+		stud.getLogs().add(createLog);
+		repo.save(stud);
+		return newPayments;
+
+	}
+
+	@Override
+	public List<PaymentDto> deletePaymentByDate(String id, LocalDateTime date) {
+		if (!repo.existsById(id)) {
+			throw new StudentNotFoundException(id);
+		}
+		StudentContact stud = getStudentContact(id);
+		List<PaymentDto> oldPayments = stud.getPayments().stream().filter(payment -> payment.getDate().isEqual(date))
+				.collect(Collectors.toList());
+
+		List<PaymentDto> newPayments = stud.getPayments().stream().filter(payment -> !payment.getDate().isEqual(date))
+				.collect(Collectors.toList());
+		stud.setPayments(newPayments);
+		String createLog = LocalDate.now().toString() + " - payment has been deleted";
+		stud.getLogs().add(createLog);
+		repo.save(stud);
+		return oldPayments;
 	}
 
 }

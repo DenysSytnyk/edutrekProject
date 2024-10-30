@@ -1,5 +1,6 @@
 package telran.edutrek.student.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import telran.edutrek.accounting.dto.UserAccountResponseDto;
 import telran.edutrek.reminder.dto.ReminderDto;
 import telran.edutrek.student.dto.PaymentDto;
+import telran.edutrek.student.dto.PaymentUpdateDto;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.dto.StudentRegisterDto;
 import telran.edutrek.student.dto.StudentUpdateDto;
@@ -71,6 +73,19 @@ public class StudentController {
 	@PutMapping("/students/reminder/{id}")
 	public boolean addReminderById(@PathVariable String id, @RequestBody ReminderDto reminder) {
 		return service.addReminderById(id, reminder);
+
+	}
+
+	@PutMapping("/students/payments/update/{id}/{date}")
+	public List<PaymentDto> updatePayment(@PathVariable String id, @PathVariable LocalDateTime date,
+			@RequestBody PaymentUpdateDto payment) {
+		return service.updatePayment(id, date, payment);
+	}
+
+	@DeleteMapping("/students/payments/{id}/{data}")
+	public List<PaymentDto> deletePaymentByDate(@PathVariable String id, @PathVariable LocalDateTime data) {
+
+		return service.deletePaymentByDate(id, data);
 	}
 
 }
