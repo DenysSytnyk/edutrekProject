@@ -42,7 +42,7 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 		
 		if (repo.existsById(account.getLogin())) 
 			throw new UserExistsException(account.getLogin());
-		if (isPasswordValid(account.getPassword())) 
+		if (!isPasswordValid(account.getPassword())) 
 			throw new PasswordNotValidException(account.getPassword());
 		
 		UserAccount acc = new UserAccount(account.getLogin(), getHash(account.getPassword()),
@@ -58,8 +58,41 @@ public class AccountingService implements IAccountingManagement, CommandLineRunn
 	}
 
 	private boolean isPasswordValid(String password) {
-		return password.length()<=passLength;
-	}
+		 int min =6;
+		    int max=12;
+		    int digit=0;
+		    int special=0;
+		    int upCount=0;
+		    int loCount=0;
+		   
+		    if(password.length() <= min && password.length() >= max)
+		    	return false;
+		       
+		    	for(int i =0;i<password.length();i++){
+		            char c = password.charAt(i);
+		            if(Character.isUpperCase(c)){
+		                upCount++;
+		            }
+		            if(Character.isLowerCase(c)){
+		                loCount++;
+		            }
+		            if(Character.isDigit(c)){
+		                digit++;
+		            }
+		            if(c>=33&&c<=46||c==64){
+		                special++;
+		            }
+		        }
+		        
+		        if(special>=1&&loCount>=1&&upCount>=1&&digit>=1)
+		        {
+		        	 return true;
+		        }else {
+					return false;
+				}
+		           
+		        }
+	
 
 	@Override
 	public UserAccountResponseDto deleteAccountById(String id) {

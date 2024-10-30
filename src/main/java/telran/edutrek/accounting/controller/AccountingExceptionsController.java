@@ -61,6 +61,14 @@ public class AccountingExceptionsController
 	ResponseEntity<String> handlerUserExistException(UserExistsException e)
 	{
 		log.error(e.getMessage());
+		String message = USER_EXIST + e.getMessage();
+		return new ResponseEntity<String>(message, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(UserIsBlockedException.class)
+	ResponseEntity<String> handlerUserBlockedException(UserIsBlockedException e)
+	{
+		log.error(e.getMessage());
 		String message = USER_IS_BLOCKED + e.getMessage();
 		return new ResponseEntity<String>(message, HttpStatus.CONFLICT);
 	}
