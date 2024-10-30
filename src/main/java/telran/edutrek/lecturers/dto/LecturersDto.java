@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.edutrek.contact.dto.UserContactDto;
-import telran.edutrek.lecturers.entities.LecturersContact;
 import telran.edutrek.student.dto.GroupForStudentDto;
 import telran.edutrek.utils.Course;
 import telran.edutrek.utils.StatusContact;
