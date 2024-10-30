@@ -139,7 +139,7 @@ public class ContactService implements IContactManagement{
 		UserContact user=getContactById(id);
 		user.setComment(comment);
 		
-		String createLog = LocalDate.now().toString() + comment;
+		String createLog = LocalDate.now().toString() + " " + comment;
 		user.getLogs().add(createLog);
 		repo.save(user);
 		return true;
