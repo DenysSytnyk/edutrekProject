@@ -40,7 +40,7 @@ public class StudentService implements IStudentManagement {
 		}
 		StudentContact stud = new StudentContact(student.getName(), student.getSurName(), student.getPhone(),
 				student.getEmail(), student.getCity(), student.getCourse(), student.getSourse(), student.getComment(),
-				student.getStatusContact(), student.getGroup(), student.getCost_course(), null, null,
+				student.getStatusContact(), student.getGroup(), student.getCost_course(), null, s.getLogs(),
 				student.getStatus_payment(), null);
 		String createLog = LocalDate.now().toString() + " - student created";
 		LinkedList<String> logsNew = new LinkedList<String>();
@@ -188,7 +188,7 @@ public class StudentService implements IStudentManagement {
 			throw new StudentNotFoundException(id);
 		}
 		StudentContact stud = getStudentContact(id);
-		if (reminder.getDate().isBefore(LocalDateTime.now())) {
+		if (reminder.getDate().isBefore(LocalDate.now())) {
 			throw new ReminderDateNotValidException(reminder.getDate());
 		}
 		String createLog = LocalDate.now().toString() + " - reminder has been added";

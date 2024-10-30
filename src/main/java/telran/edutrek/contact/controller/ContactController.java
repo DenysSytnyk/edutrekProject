@@ -53,6 +53,12 @@ public class ContactController {
 		
 		return server.getAllContact();
 	}
+	
+	@GetMapping("/all/active")
+	public List<UserContactDto> getAllActiveContact() {
+		
+		return server.getAllActiveContact();
+	}
 
 	@GetMapping("/all/name/{name}")
 	public List<UserContactDto> getContactByName(@PathVariable String name) {
@@ -64,6 +70,12 @@ public class ContactController {
 	public List<UserContactDto> getContactBySurName(@PathVariable String surName) {
 		
 		return server.getContactBySurName(surName);
+	}
+	
+	@PutMapping("/comment/{id}")
+	public boolean addCommentById(@PathVariable String id, @RequestBody String comment)
+	{
+		return server.addCommentById(id, comment);
 	}
 
 }

@@ -16,11 +16,14 @@ import telran.edutrek.group.dto.GroupRegisterDto;
 import telran.edutrek.group.dto.GroupUpdateDto;
 import telran.edutrek.group.dto.StudentForGroupDto;
 import telran.edutrek.group.entities.GroupData;
+import telran.edutrek.group.exceptions.GroupDeactivatedException;
 import telran.edutrek.group.exceptions.GroupExistsExceptions;
 import telran.edutrek.group.exceptions.GroupNotFoundExceptions;
 import telran.edutrek.group.exceptions.StudentExistsInGroupExceptions;
 import telran.edutrek.group.exceptions.StudentNotInGroupException;
 import telran.edutrek.group.repo.GroupRepository;
+import telran.edutrek.reminder.dto.ReminderDto;
+import telran.edutrek.reminder.exceptions.ReminderCommentNotValidException;
 import telran.edutrek.student.dto.GroupForStudentDto;
 import telran.edutrek.student.dto.StudentDto;
 import telran.edutrek.student.entities.StudentContact;
@@ -39,7 +42,8 @@ public class GroupService implements IGroupManagement
 	@Override
 	public GroupDto createGroup(GroupRegisterDto group) 
 	{
-		if (repo.existsById(group.getName())) 
+		GroupData g = repo.findByName(group.getName()).orElse(null);
+		if (g != null && !g.isDeactivate()) 
 			throw new GroupExistsExceptions(group.getName());
 		
 		GroupData data = GroupRegisterDto.build(group);
@@ -71,7 +75,11 @@ public class GroupService implements IGroupManagement
 	@Override
 	public GroupDto updateGroupById(String id, GroupUpdateDto newGroupData) 
 	{
+	
 		GroupData data = getGroup(id);
+		if (data.isDeactivate())
+			throw new GroupDeactivatedException(data.getName());
+		
 		data.setName(newGroupData.getName());
 		data.setWhatsapp(newGroupData.getWhatsapp());
 		data.setSkype(newGroupData.getSkype());
@@ -106,6 +114,9 @@ public class GroupService implements IGroupManagement
 		GroupData data = getGroup(groupId);
 		StudentContact student = getStudent(studentId);
 		
+		if (data.isDeactivate())
+			throw new GroupDeactivatedException(data.getName());
+		
 		List<StudentForGroupDto> list = data.getStudents();
 		if (list == null)
 			list = new ArrayList<StudentForGroupDto>();
@@ -133,6 +144,9 @@ public class GroupService implements IGroupManagement
 	{
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
+		
 		List<StudentForGroupDto> list = group.getStudents();
 		
 		if (list.stream().anyMatch(s -> s.getId().equals(studentId))) 
@@ -151,6 +165,8 @@ public class GroupService implements IGroupManagement
 	{
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
 		
 		if (!student.getGroup().stream().anyMatch((g) -> g.getId().equals(group.getId()))) 
 			throw new StudentNotInGroupException(groupId, student.getSurName());
@@ -169,12 +185,12 @@ public class GroupService implements IGroupManagement
 	public boolean deactivateGroupById(String id) 
 	{
 		GroupData group = getGroup(id);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
 		
-		if (ChronoUnit.DAYS.between(group.getEndDate(), LocalDate.now()) > 30) 
-		{
+
 			group.setStatus(true);
 			repo.save(group);
-		}
 			
 		return true;
 	}
@@ -207,6 +223,7 @@ public class GroupService implements IGroupManagement
 		StudentContact student = getStudent(studentId);
 		GroupData group = getGroup(groupId);
 		
+		
 		if (!student.getGroup().stream().anyMatch((g) -> g.getId().equals(group.getId()))) 
 			throw new StudentNotInGroupException(groupId, student.getSurName());
 	
@@ -223,7 +240,32 @@ public class GroupService implements IGroupManagement
 	public GroupDto getGroupByName(String name) 
 	{
 		return repo.findByName(name).orElseThrow(() -> 
-		new GroupNotFoundExceptions(name));
+		new GroupNotFoundExceptions(name)).build();
+	}
+
+	@Override
+	public boolean addReminderGroupById(String groupId, String reminder) 
+	{
+		if (reminder == null)
+			throw new ReminderCommentNotValidException();
+		
+		GroupData group = getGroup(groupId);
+		if (group.isDeactivate())
+			throw new GroupDeactivatedException(group.getName());
+		
+		ReminderDto rem = new ReminderDto(LocalDate.now(), reminder);
+		group.setReminder(rem);
+		
+		String logForStudent = LocalDate.now().toString() + " " +  group.getName() + " - " + reminder;
+		group.getStudents().forEach((s) ->
+		{
+			StudentContact student = getStudent(s.getId());
+			student.getLogs().add(logForStudent);
+			studRepo.save(student);
+		});
+		
+		repo.save(group);
+		return true;
 	}
 
 }

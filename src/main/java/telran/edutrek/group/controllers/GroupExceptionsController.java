@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import telran.edutrek.group.exceptions.GroupDeactivatedException;
 import telran.edutrek.group.exceptions.GroupExistsExceptions;
 import telran.edutrek.group.exceptions.GroupNotFoundExceptions;
 import telran.edutrek.group.exceptions.StudentExistsInGroupExceptions;
@@ -40,5 +42,12 @@ public class GroupExceptionsController
 	{
 		String message = STUDENT_NOT_IN_GROUP + e.getMessage();
 		return new ResponseEntity<String>(message, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(GroupDeactivatedException.class)
+	ResponseEntity<String> handlerGroupDeactivatedException(GroupDeactivatedException e)
+	{
+		String message = GROUP_DEACTIVATED + e.getMessage();
+		return new ResponseEntity<String>(message, HttpStatus.CONFLICT);
 	}
 }

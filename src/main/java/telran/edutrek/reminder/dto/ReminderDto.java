@@ -1,5 +1,6 @@
 package telran.edutrek.reminder.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -9,6 +10,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ReminderDto 
 {
-	LocalDateTime date;
+	LocalDate date;
 	String comment;
 }
