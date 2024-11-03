@@ -1,5 +1,6 @@
 package telran.edutrek.lecturers.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,9 @@ public class LecturersService implements ILecturersManagement{
 		LecturersContact lecturerContact=new LecturersContact(lecturer.getName(), lecturer.getSurName(), lecturer.getPhone(),
 				lecturer.getEmail(), lecturer.getCity(), null, lecturer.getSourse(), lecturer.getComment(),
 				lecturer.getStatusContact(), lecturer.getGroup(), new LinkedList<String>());
+		String createLog = LocalDate.now().toString() + " - Lecturer created";
+		lecturerContact.getLogs().add(createLog);
+		
 		repo.save(lecturerContact);
 		return lecturerContact.build();
 	}
@@ -40,6 +44,9 @@ public class LecturersService implements ILecturersManagement{
 	@Override
 	public LecturersDto removeLecturerById(String id) {
 		LecturersContact lecturer=getLecturer(id);
+		String createLog = LocalDate.now().toString() + " - Remove lecturer";
+		lecturer.getLogs().add(createLog);
+		
 		repo.delete(lecturer);
 		return lecturer.build();
 	}
@@ -76,6 +83,9 @@ public class LecturersService implements ILecturersManagement{
 		user.setCity(newLecturer.getCity());
 		user.setGroup(newLecturer.getGroup());
 		user.setStatusContact(newLecturer.getStatusContact());
+		String createLog = LocalDate.now().toString() + " - Update lecturer";
+		user.getLogs().add(createLog);
+		
 		repo.save(user);
 		return user.build();
 	}
@@ -115,6 +125,9 @@ public class LecturersService implements ILecturersManagement{
 		}
 		list.add(group);
 		lecturer.setGroup(list);
+		String createLog = LocalDate.now().toString() + " - Add group to lecturer";
+		lecturer.getLogs().add(createLog);
+		
 		repo.save(lecturer);
 		return lecturer.build();
 	}
@@ -130,6 +143,8 @@ public class LecturersService implements ILecturersManagement{
 			throw new GroupToLecturerNotExistsException(group.getName());
 		}
 		list.remove(group);
+		String createLog = LocalDate.now().toString() + " - Remove group to lecturer";
+		lecturer.getLogs().add(createLog);
 		repo.save(lecturer);
 		return lecturer.build();
 	}

@@ -2,15 +2,11 @@ package telran.edutrek.contact.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 import telran.edutrek.contact.dto.ContactUpdateDto;
 import telran.edutrek.contact.dto.UserContactDto;
 import telran.edutrek.contact.dto.UserContactRegisterDto;
@@ -23,7 +19,6 @@ import telran.edutrek.student.repo.StudentRepository;
 import telran.edutrek.utils.StatusContact;
 
 @Service
-@Slf4j
 public class ContactService implements IContactManagement{
 	
 	@Autowired
@@ -49,13 +44,14 @@ public class ContactService implements IContactManagement{
 	@Override
 	public UserContactDto removeContactById(String id) {
 		UserContact user=getContactById(id);
+		String createLog = LocalDate.now().toString() + " - Remove contact";
+		user.getLogs().add(createLog);
 		repo.delete(user);
 		return user.build();
 	}
 
 	@Override
 	public UserContact getContactById(String id) {
-		
 		return repo.findById(id).orElseThrow(()->
 		new UserContactNotFoundException(id)
 				);
@@ -102,6 +98,8 @@ public class ContactService implements IContactManagement{
 			user.setSourse(newContact.getSourse());
 			user.setComment(newContact.getComment());
 			user.setStatusContact(newContact.getStatusContact());
+			String createLog = LocalDate.now().toString() + " - Update contact";
+			user.getLogs().add(createLog);
 			repo.save(user);
 			return user.build();
 		
@@ -114,20 +112,22 @@ public class ContactService implements IContactManagement{
 		List<StudentDto> res1=studRepo.findAll().stream().map(u->u.build()).collect(Collectors.toList());
 		List<UserContactDto> resultat = new ArrayList<UserContactDto>();
 		resultat.addAll(res);
-		resultat.addAll(res1);	
+		resultat.addAll(res1);
+		
 		return resultat;
 	}
 
 	@Override
 	public List<UserContactDto> getContactByName(String name) {
-	return 	getAllContact().stream().filter(u->u.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
-		
+		List<UserContactDto> user=repo.findByName(name);
+	
+	return 	user;
 	}
 
 	@Override
 	public List<UserContactDto> getContactBySurName(String surName) {
-		return 	getAllContact().stream().filter(u->u.getSurName().equalsIgnoreCase(surName)).collect(Collectors.toList());
-		
+		List<UserContactDto> user=repo.findBysurName(surName);
+		return 	user;
 	}
 
 	@Override

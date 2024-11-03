@@ -8,6 +8,7 @@ public class EdutrekAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EdutrekAppApplication.class, args);
+		
 	}
 
 }
