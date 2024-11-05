@@ -149,6 +149,9 @@ public class GroupService implements IGroupManagement
 		
 		List<StudentForGroupDto> list = group.getStudents();
 		
+		if (list == null) 
+			list = new ArrayList<StudentForGroupDto>();
+		
 		if (list.stream().anyMatch(s -> s.getId().equals(studentId))) 
 			throw new StudentExistsInGroupExceptions(groupId, student.getSurName());
 		
