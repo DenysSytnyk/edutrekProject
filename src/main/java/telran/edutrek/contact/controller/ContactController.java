@@ -63,7 +63,7 @@ public class ContactController {
 	@GetMapping("/all/name/{name}")
 	public List<UserContactDto> getContactByName(@PathVariable String name) {
 		
-		return server.getContactBySurName(name);
+		return server.getContactByName(name);
 	}
 
 	@GetMapping("/all/surName/{surName}")

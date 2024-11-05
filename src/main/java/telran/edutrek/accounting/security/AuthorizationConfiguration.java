@@ -26,7 +26,7 @@ public class AuthorizationConfiguration {
 				.requestMatchers(HttpMethod.GET, "/auth", "/auth/id/*", "/auth/login/*", "/students/id/*", "/group/*",
 						"/group", "/students/name/*", "/students", "/contact/all", "/contact/id/*", "/contact/all/*",
 						"/group/name/*", "/lecturer/all", "/lecturer/name/*", "/lecturer/id/*", "/contact/all/active",
-						"/course/all", "/course/id/*")
+						"/course/all", "/course/id/*", "/contact/all/name/*", "/contact/all/surName/*")
 				.authenticated()
 				.requestMatchers(HttpMethod.PUT, "/auth/password/*", "/auth/login/*", "/group/update/*",
 						"/group/add/*/*", "/group/move/*/*", "/group/archive/*/*", "/students/comment/*",
